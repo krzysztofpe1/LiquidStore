@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StoreServer.DatabaseModels
+﻿namespace StoreServer.DatabaseModels
 {
     internal class ORDER
     {
-        public int ID { get; set; }
-        [Required]
+        public int Id { get; set; }
         [StringLength(maximumLength: 100)]
-        public string COMMENT { get; set; }
+        public string Comment { get; set; } = null!;
+
+        public IEnumerable<ORDERDETAILS> Details { get; set; } = null!;
     }
 }
