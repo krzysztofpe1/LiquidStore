@@ -1,23 +1,30 @@
-﻿using System;
-using System.IO;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Identity.Client;
-using StoreServer.DatabaseModels;
+using StoreServer.Services;
 
 namespace StoreServer
 {
     internal class Program
     {
-        public static IServiceCollection Services { get; private set; }
-        public static IServiceProvider Provider { get; private set; }
         static void Main(string[] args)
         {
-            Services = new ServiceCollection();
-            Services.AddSingleton<StoreDbService, StoreDbService>();
-            Provider = Services.BuildServiceProvider();
+            var builder = WebApplication.CreateBuilder();
+            builder.Services.AddDbContext<StoreDbContext>(options =>
+            {
+                var connectionString = "Server = 192.168.0.5; Database = Store; User = storage";
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            });
+            using var scope = builder.Services.BuildServiceProvider().CreateScope();
+            scope.ServiceProvider.GetRequiredService<StoreDbContext>().Database.EnsureCreated();
 
-            var dbService = Provider.GetRequiredService<StoreDbService>();
+            builder.Services.AddControllers();
+            builder.Services.AddScoped<StorageDbService>();
+            builder.Services.AddScoped<OrderDbService>();
+
+            var app = builder.Build();
+            app.MapControllers();
+
+            app.Run();
         }
     }
 }
