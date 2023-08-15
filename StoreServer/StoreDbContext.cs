@@ -3,9 +3,9 @@ using StoreServer.DatabaseModels;
 
 namespace StoreServer
 {
-    internal class DatabaseContext : DbContext
+    public class StoreDbContext : DbContext
     {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) :
+        public StoreDbContext(DbContextOptions<StoreDbContext> options) :
             base(options)
         {
 
