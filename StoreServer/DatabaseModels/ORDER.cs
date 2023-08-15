@@ -1,8 +1,9 @@
 ﻿namespace StoreServer.DatabaseModels
 {
-    internal class ORDER
+    public class ORDER
     {
-        public int Id { get; set; }
+        [Required]
+        public int? Id { get; set; }
         [StringLength(maximumLength: 100)]
         public string Comment { get; set; } = null!;
 
