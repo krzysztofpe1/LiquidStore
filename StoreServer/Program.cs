@@ -11,7 +11,7 @@ namespace StoreServer
             var builder = WebApplication.CreateBuilder();
             builder.Services.AddDbContext<StoreDbContext>(options =>
             {
-                var connectionString = "Server = 192.168.0.5; Database = Store; User = storage";
+                var connectionString = "Server = localhost; Database = Store; User = root";
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
             using var scope = builder.Services.BuildServiceProvider().CreateScope();

@@ -16,19 +16,13 @@ using System.Windows.Shapes;
 namespace StoreClient.Views
 {
     /// <summary>
-    /// Interaction logic for LoginView.xaml
+    /// Interaction logic for StorageView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class StorageView : UserControl
     {
-        public bool LoggedIn { get; private set; }
-        public LoginView()
+        public StorageView()
         {
             InitializeComponent();
-        }
-
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            LoggedIn = true;
         }
     }
 }

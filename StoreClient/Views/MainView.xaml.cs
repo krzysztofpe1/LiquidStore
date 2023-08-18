@@ -16,19 +16,29 @@ using System.Windows.Shapes;
 namespace StoreClient.Views
 {
     /// <summary>
-    /// Interaction logic for LoginView.xaml
+    /// Interaction logic for MainView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class MainView : UserControl
     {
-        public bool LoggedIn { get; private set; }
-        public LoginView()
+        private StorageView storageView;
+        public MainView()
         {
             InitializeComponent();
+            storageView = new StorageView();
+            PagableContent.Content = storageView;
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void StorageButton_Click(object sender, RoutedEventArgs e)
         {
-            LoggedIn = true;
+
+        }
+        private void OrdersButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void UsersButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
