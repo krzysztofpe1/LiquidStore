@@ -1,5 +1,4 @@
-﻿using StoreClient.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,21 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StoreClient
+namespace StoreClient.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy MainWindow.xaml
+    /// Interaction logic for LoginView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LoginView : UserControl
     {
-        #region private properties
-        private LoginView loginView;
-        #endregion
-        public MainWindow()
+        public LoginView()
         {
             InitializeComponent();
-            loginView = new LoginView();
-            MainContent.Content = loginView;
         }
     }
 }
