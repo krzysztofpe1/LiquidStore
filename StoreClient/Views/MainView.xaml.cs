@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using StoreClient;
 
 namespace StoreClient.Views
 {
@@ -20,17 +21,26 @@ namespace StoreClient.Views
     /// </summary>
     public partial class MainView : UserControl
     {
-        private StorageView storageView;
+        #region Private Properties
+        private StoreRestClient _restClient { get; set; }
+        #endregion
+        #region Views
+        private StorageView _storageView;
+        #endregion
+        #region constructor
         public MainView()
         {
             InitializeComponent();
-            storageView = new StorageView();
-            PagableContent.Content = storageView;
+            _restClient = new StoreRestClient("http://localhost:5000");
+            _storageView = new StorageView(_restClient);
+            PagableContent.Content = _storageView;
         }
-
+        #endregion
+        #region Button Clicks
         private void StorageButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _storageView.RefreshAsync();
+            PagableContent.Content = _storageView;
         }
         private void OrdersButton_Click(object sender, RoutedEventArgs e)
         {
@@ -40,5 +50,6 @@ namespace StoreClient.Views
         {
 
         }
+        #endregion
     }
 }
