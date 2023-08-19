@@ -21,38 +21,51 @@ namespace StoreClient.Views
     public partial class StorageView : UserControl
     {
         private StoreRestClient _restClient;
-        public StorageView(StoreRestClient client)
+        public StorageView(StoreRestClient restClient)
         {
-            _restClient = client;
+            _restClient = restClient;
             InitializeComponent();
             Initialize();
             RefreshAsync();
         }
         private void Initialize()
         {
-            DataGridTextColumn textColumn = new DataGridTextColumn();
-            textColumn.Header = "ID";
-            textColumn.Binding = new Binding("Id");
+            DataGridTextColumn textColumn;
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "ID",
+                Binding = new Binding("Id")
+            };
             StorageDataGrid.Columns.Add(textColumn);
-            textColumn= new DataGridTextColumn();
-            textColumn.Header = "Marka";
-            textColumn.Binding = new Binding("Brand");
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "Marka",
+                Binding = new Binding("Brand")
+            };
             StorageDataGrid.Columns.Add(textColumn);
-            textColumn= new DataGridTextColumn();
-            textColumn.Header= "Nazwa";
-            textColumn.Binding = new Binding("Name");
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "Nazwa",
+                Binding = new Binding("Name")
+            };
             StorageDataGrid.Columns.Add(textColumn);
-            textColumn= new DataGridTextColumn();
-            textColumn.Header = "Objętość";
-            textColumn.Binding = new Binding("Volume");
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "Objętość",
+                Binding = new Binding("Volume")
+            };
             StorageDataGrid.Columns.Add(textColumn);
-            textColumn= new DataGridTextColumn();
-            textColumn.Header = "Koszt";
-            textColumn.Binding = new Binding("Cost");
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "Koszt",
+                Binding = new Binding("Cost")
+            };
             StorageDataGrid.Columns.Add(textColumn);
-            textColumn= new DataGridTextColumn();
-            textColumn.Header = "Pozostało";
-            textColumn.Binding = new Binding("Remaining");
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "Pozostało",
+                Binding = new Binding("Remaining")
+            };
             StorageDataGrid.Columns.Add(textColumn);
         }
         public async Task RefreshAsync()

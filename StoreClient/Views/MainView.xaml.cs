@@ -26,6 +26,7 @@ namespace StoreClient.Views
         #endregion
         #region Views
         private StorageView _storageView;
+        private OrdersView _ordersView;
         #endregion
         #region constructor
         public MainView()
@@ -33,6 +34,7 @@ namespace StoreClient.Views
             InitializeComponent();
             _restClient = new StoreRestClient("http://localhost:5000");
             _storageView = new StorageView(_restClient);
+            _ordersView = new OrdersView(_restClient);
             PagableContent.Content = _storageView;
         }
         #endregion
@@ -44,7 +46,8 @@ namespace StoreClient.Views
         }
         private void OrdersButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _ordersView.RefreshAsync();
+            PagableContent.Content = _ordersView;
         }
         private void UsersButton_Click(object sender, RoutedEventArgs e)
         {

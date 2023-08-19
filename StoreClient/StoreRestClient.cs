@@ -32,7 +32,7 @@ namespace StoreClient
 
         public async Task<List<ORDER>> GetOrders()
         {
-            var response = await _httpClient.GetStringAsync(_baseUrl + "/orders");
+            var response = await _httpClient.GetStringAsync(_baseUrl + "/order");
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
