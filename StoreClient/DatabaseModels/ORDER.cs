@@ -1,6 +1,9 @@
 ﻿using StoreClient.DatabaseModels;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Remoting.Messaging;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace StoceClient.DatabaseModels
 {
@@ -11,6 +14,7 @@ namespace StoceClient.DatabaseModels
         [StringLength(maximumLength: 100)]
         public string Comment { get; set; }
 
-        public IEnumerable<ORDERDETAILS> Details { get; set; }
+        public List<ORDERDETAILS> Details { get; set; }
     }
 }
+

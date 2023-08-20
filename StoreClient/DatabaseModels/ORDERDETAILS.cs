@@ -10,7 +10,30 @@ namespace StoreClient.DatabaseModels
         public string Name { get; set; }
         public int Volume { get; set; }
         public double Concentration { get; set; }
-        public int Status { get; set; }
+        public OrderStatusMapping Status { get; set; }
+        public string StatusMapping
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case OrderStatusMapping.ORDERED:
+                        return "Zamówione";
+                    case OrderStatusMapping.PREPARED:
+                        return "Przygotowane";
+                    case OrderStatusMapping.DELIVERED:
+                        return "Dostarczone";
+                    default:
+                        return "";
+                }
+            }
+            set
+            {
+                if (value == "Zamówione") Status = OrderStatusMapping.ORDERED;
+                else if (value == "Przygotowane") Status = OrderStatusMapping.PREPARED;
+                else if (value == "Dostarczone") Status = OrderStatusMapping.DELIVERED;
+            }
+        }
 
         public ORDER Order { get; set; }
     }

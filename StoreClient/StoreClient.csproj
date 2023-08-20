@@ -92,6 +92,7 @@
     </ApplicationDefinition>
     <Compile Include="DatabaseModels\ORDER.cs" />
     <Compile Include="DatabaseModels\ORDERDETAILS.cs" />
+    <Compile Include="DatabaseModels\OrderStatusMapping.cs" />
     <Compile Include="DatabaseModels\STORAGE.cs" />
     <Compile Include="StoreRestClient.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
@@ -161,6 +162,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\OrdersControls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
