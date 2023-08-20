@@ -19,12 +19,17 @@ namespace StoreServer.Services
 
         public List<ORDER> Get()
         {
-            return _dbContext.Orders.ToList();
+            var list = _dbContext.Orders
+                .Include(o =>o.Details)
+                .ToList();
+            return list;
         }
 
         public ORDER? Get(int id)
         {
-            return _dbContext.Orders.FirstOrDefault(item => item.Id == id);
+            return _dbContext.Orders
+                .Include(o=>o.Details)
+                .FirstOrDefault(item => item.Id == id);
         }
 
         public void Update(ORDER item)

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StoreServer.DatabaseModels;
+﻿using StoreServer.DatabaseModels;
 
 namespace StoreServer
 {

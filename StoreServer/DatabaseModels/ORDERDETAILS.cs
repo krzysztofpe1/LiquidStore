@@ -9,7 +9,5 @@
         public int Volume { get; set; }
         public double Concentration { get; set; }
         public int Status { get; set; }
-
-        public ORDER Order { get; set; } = null!;
     }
 }
