@@ -28,7 +28,7 @@ namespace StoreServer.Services
         public void Update(STORAGE item)
         {
             if (item.Id == null)
-                throw new ApiException(HttpStatusCode.BadRequest, "Id cannot be null in insert Storage.");
+                throw new ApiException(HttpStatusCode.BadRequest, "Id cannot be null in update Storage.");
             var dbItem = Get(item.Id.Value);
             if (dbItem == null)
                 throw new ApiException(HttpStatusCode.BadRequest, $"Cannot find entry in Storage to update id: {item.Id}");
@@ -40,6 +40,7 @@ namespace StoreServer.Services
             if (id == null)
                 throw new ApiException(HttpStatusCode.BadRequest, "You dumb fuck, id is null while deleting Storage item.");
             _dbContext.Storage.Where(item => item.Id == id).ExecuteDelete();
+            _dbContext.SaveChanges();
         }
         public void Insert(STORAGE item)
         {

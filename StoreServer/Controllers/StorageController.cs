@@ -22,6 +22,5 @@ namespace StoreServer.Controllers
             if (item != null) return Ok(new List<STORAGE> { item });
             return NotFound();
         }
-
     }
 }
