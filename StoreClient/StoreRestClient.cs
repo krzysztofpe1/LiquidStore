@@ -47,7 +47,7 @@ namespace StoreClient
         {
             var message = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/session");
             message.Headers.Add("username", username);
-            message.Headers.Add("password", password);
+            message.Headers.Add("password", BCrypt.Net.BCrypt.HashPassword(password));
             HttpResponseMessage response;
             try
             {
@@ -75,6 +75,7 @@ namespace StoreClient
                     PropertyNameCaseInsensitive = true
                 };
                 _sessionCredentials = JsonSerializer.Deserialize<SessionCredentials>(await response.Content.ReadAsStringAsync(), options);
+                _sessionCredentials.Username = username;
                 return true;
             }
             return false;

@@ -26,7 +26,7 @@ namespace StoreServer.Controllers
             var dbUser = _usersDbService.Get(username);
             if (dbUser == null) return BadRequest();
             // TODO szyfrowanie hasla
-            if (dbUser.Password != password) return BadRequest();
+            if (!BCrypt.Net.BCrypt.Verify(dbUser.Password, password)) return BadRequest();
             var sessionToken = GenerateRandomString(32);
             var accessKey = GenerateRandomString(28);
             var expirationDate = DateTime.UtcNow.AddHours(1);
