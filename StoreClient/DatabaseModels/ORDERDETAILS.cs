@@ -34,7 +34,6 @@ namespace StoreClient.DatabaseModels
                 else if (value == "Dostarczone") Status = OrderStatusMapping.DELIVERED;
             }
         }
-
         public ORDER Order { get; set; }
     }
 }
