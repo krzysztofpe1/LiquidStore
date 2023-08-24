@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Text.Json;
 
 namespace StoreClient
 {
@@ -43,6 +43,7 @@ namespace StoreClient
             var orderList = JsonSerializer.Deserialize<List<ORDER>>(response, options);
             return orderList;
         }
+        
         public async Task<bool> CreateSession(string username, string password)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/session");
@@ -78,6 +79,16 @@ namespace StoreClient
                 _sessionCredentials.Username = username;
                 return true;
             }
+            return false;
+        }
+
+        public async Task<bool> SaveStorageItem(STORAGE item)
+        {
+            var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/storage");
+            var content = new StringContent(JsonSerializer.Serialize(item));
+            httpMessage.Content = content;
+            var response = await _httpClient.SendAsync(httpMessage);
+            if (response.StatusCode == HttpStatusCode.OK) return true;
             return false;
         }
     }

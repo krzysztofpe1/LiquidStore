@@ -42,11 +42,12 @@ namespace StoreServer.Services
             _dbContext.Storage.Where(item => item.Id == id).ExecuteDelete();
             _dbContext.SaveChanges();
         }
-        public void Insert(STORAGE item)
+        public int Insert(STORAGE item)
         {
             if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert Storage with id.");
-            _dbContext.Storage.Add(item);
+            var entity = _dbContext.Storage.Add(item).Entity;
             _dbContext.SaveChanges();
+            return entity.Id.Value;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StoreServer.DatabaseModels;
 using StoreServer.Services;
+using StoreServer.Utils;
 
 namespace StoreServer.Controllers
 {
@@ -22,5 +23,31 @@ namespace StoreServer.Controllers
             if (item != null) return Ok(new List<STORAGE> { item });
             return NotFound();
         }
+        [HttpPut]
+        public ActionResult Save([FromBody] STORAGE item)
+        {
+            try
+            {
+                if (item.Id != null)
+                {
+                    var index = _service.Insert(item);
+                    return Created($"/storage?id={index}", "gowno");
+                }
+                else
+                {
+                    _service.Update(item);   
+                    return Created($"/storage?id={item.Id}", "gowno");
+                }
+            }
+            catch (ApiException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

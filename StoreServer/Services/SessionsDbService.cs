@@ -15,6 +15,7 @@ namespace StoreServer.Services
         public SessionsDbService(StoreDbContext dbContext)
         {
             _dbContext = dbContext;
+            GetRidOfExpiredSessions();
         }
         public SESSION? Get(string username)
         {

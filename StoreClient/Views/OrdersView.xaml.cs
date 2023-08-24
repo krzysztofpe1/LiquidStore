@@ -92,10 +92,8 @@ namespace StoreClient.Views
             };
             dataGrid.Columns.Add(textColumn);
 
-            details.ForEach(detail =>
-            {
-                dataGrid.Items.Add(detail);
-            });
+            dataGrid.AutoGenerateColumns = false;
+            dataGrid.ItemsSource = details;
             return dataGrid;
         }
         public async Task RefreshAsync()
