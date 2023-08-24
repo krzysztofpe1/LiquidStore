@@ -29,10 +29,10 @@ namespace StoreClient.Views
         private OrdersView _ordersView;
         #endregion
         #region constructor
-        public MainView()
+        public MainView(StoreRestClient restClient)
         {
             InitializeComponent();
-            _restClient = new StoreRestClient("http://localhost:5000");
+            _restClient = restClient;
             _storageView = new StorageView(_restClient);
             _ordersView = new OrdersView(_restClient);
             PagableContent.Content = _storageView;

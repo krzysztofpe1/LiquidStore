@@ -20,9 +20,11 @@ namespace StoreClient.Views
     /// </summary>
     public partial class LoginView : UserControl
     {
+        private StoreRestClient _restClient;
         public bool LoggedIn { get; private set; }
-        public LoginView()
+        public LoginView(StoreRestClient restClient)
         {
+            _restClient = restClient;
             InitializeComponent();
         }
 

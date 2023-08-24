@@ -26,11 +26,13 @@ namespace StoreClient
         private LoginView loginView;
         private MainView mainView;
         private Thread _loginWatcherThread;
+        private StoreRestClient _restClient;
         #endregion
         public MainWindow()
         {
             InitializeComponent();
-            loginView = new LoginView();
+            _restClient = new StoreRestClient("127.0.0.1:5000");
+            loginView = new LoginView(_restClient);
             
             MainContent.Content = loginView;
             _loginWatcherThread = new Thread(LoginWatcher);
@@ -45,7 +47,7 @@ namespace StoreClient
             }
             this.Dispatcher.Invoke(() =>
             {
-                mainView = new MainView();
+                mainView = new MainView(_restClient);
                 MainContent.Content = mainView;
             });
         }

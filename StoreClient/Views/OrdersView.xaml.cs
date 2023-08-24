@@ -1,4 +1,5 @@
-﻿using StoreClient.DatabaseModels;
+﻿using StoceClient.DatabaseModels;
+using StoreClient.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,27 +23,28 @@ namespace StoreClient.Views
     public partial class OrdersView : UserControl
     {
         private StoreRestClient _restClient;
+        private List<ORDER> _ordersCache;
         public OrdersView(StoreRestClient restClient)
         {
             _restClient = restClient;
+            _ordersCache=new List<ORDER>();
             InitializeComponent();
             Initialize();
             RefreshAsync();
         }
-        private void Initialize()
+        private async Task Initialize()
         {
-            /*DataGridTextColumn textColumn = new DataGridTextColumn()
+            var ordersList = await _restClient.GetOrders();
+            _ordersCache = ordersList;
+            ordersList.ForEach(order =>
             {
-                Header = "ID",
-                Binding = new Binding("Id")
-            };
-            OrdersDataGrid.Columns.Add(textColumn);
-            textColumn = new DataGridTextColumn()
-            {
-                Header = "Komentarz",
-                Binding = new Binding("Comment")
-            };
-            OrdersDataGrid.Columns.Add(textColumn);*/
+                Expander expander = new Expander()
+                {
+                    Header = order.Comment,
+                    Content = InitializeDataGridOfDetails(order.Details)
+                };
+                OrdersListView.Items.Add(expander);
+            });
         }
         private DataGrid InitializeDataGridOfDetails(List<ORDERDETAILS> details)
         {
@@ -98,17 +100,13 @@ namespace StoreClient.Views
         }
         public async Task RefreshAsync()
         {
-            /*OrdersDataGrid.Items.Clear();
             var ordersList = await _restClient.GetOrders();
-            ordersList.ForEach(item =>
-            {
-                var index = OrdersDataGrid.Items.Add(item);
-            });*/
+            if(CheckCache(ordersList)) return;
+            _ordersCache = ordersList;
+
             OrdersListView.Items.Clear();
-            var ordersList = await _restClient.GetOrders();
             ordersList.ForEach(order =>
             {
-                
                 Expander expander = new Expander()
                 {
                     Header = order.Comment,
@@ -116,6 +114,23 @@ namespace StoreClient.Views
                 };
                 OrdersListView.Items.Add(expander);
             });
+        }
+
+        private bool CheckCache(List<ORDER> ordersList)
+        {
+            List<int>idsList=new List<int>();
+            _ordersCache.ForEach(item => idsList.Add(item.Id.Value));
+            foreach(var item in ordersList)
+            {
+                if (!idsList.Contains(item.Id.Value)) return false;
+            }
+            idsList = new List<int>();
+            ordersList.ForEach(item => idsList.Add(item.Id.Value));
+            foreach(var item in _ordersCache)
+            {
+                if (!idsList.Contains(item.Id.Value)) return false;
+            }
+            return true;
         }
     }
 }

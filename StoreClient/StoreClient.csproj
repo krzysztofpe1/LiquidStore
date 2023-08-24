@@ -94,6 +94,7 @@
     <Compile Include="DatabaseModels\ORDERDETAILS.cs" />
     <Compile Include="DatabaseModels\OrderStatusMapping.cs" />
     <Compile Include="DatabaseModels\STORAGE.cs" />
+    <Compile Include="SessionCredentials.cs" />
     <Compile Include="StoreRestClient.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
