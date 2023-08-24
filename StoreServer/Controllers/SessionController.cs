@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace StoreServer.Controllers
 {
+    [Route("[controller]")]
     public class SessionController : Controller
     {
         private readonly SessionsDbService _sessionsDbService;

@@ -20,6 +20,8 @@ namespace StoreServer
             builder.Services.AddControllers();
             builder.Services.AddScoped<StorageDbService>();
             builder.Services.AddScoped<OrderDbService>();
+            builder.Services.AddScoped<UsersDbService>();
+            builder.Services.AddScoped<SessionsDbService>();
 
             var app = builder.Build();
             app.MapControllers();

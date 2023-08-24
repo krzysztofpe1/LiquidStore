@@ -16,9 +16,11 @@ namespace StoreServer.Services
         {
             _dbContext = dbContext;
         }
-        public SESSION Get(string username)
+        public SESSION? Get(string username)
         {
-            return _dbContext.Sessions.FirstOrDefault(x => x.User.Name == username);
+            return _dbContext.Sessions
+                .Include(o =>o.User)
+                .FirstOrDefault(x => x.User.Name == username);
         }
         public void Delete(int? id)
         {

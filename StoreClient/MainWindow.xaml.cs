@@ -1,6 +1,7 @@
 ﻿using StoreClient.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,7 +32,7 @@ namespace StoreClient
         public MainWindow()
         {
             InitializeComponent();
-            _restClient = new StoreRestClient("127.0.0.1:5000");
+            _restClient = new StoreRestClient("http://127.0.0.1:5000");
             loginView = new LoginView(_restClient);
             
             MainContent.Content = loginView;
@@ -50,6 +51,10 @@ namespace StoreClient
                 mainView = new MainView(_restClient);
                 MainContent.Content = mainView;
             });
+        }
+        private void MainWindowClosing(object sender, CancelEventArgs e)
+        {
+            if(!loginView.LoggedIn)_loginWatcherThread.Abort();
         }
     }
 }

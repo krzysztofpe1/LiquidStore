@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace StoreClient
 {
@@ -42,12 +43,26 @@ namespace StoreClient
             var orderList = JsonSerializer.Deserialize<List<ORDER>>(response, options);
             return orderList;
         }
-        public async bool CreateSession(string username, string password)
+        public async Task<bool> CreateSession(string username, string password)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/session");
             message.Headers.Add("username", username);
             message.Headers.Add("password", password);
-            var response = await _httpClient.SendAsync(message);
+            HttpResponseMessage response;
+            try
+            {
+                response = await _httpClient.SendAsync(message);
+            }
+            catch(InvalidOperationException ex)
+            {
+                MessageBox.Show("Serwer nie odpowiada, skontaktuj się z właścicielem.", "Błąd połączenia z serwerem", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return false;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd połączenia z serwerem", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return false;
+            }
             var statusCode = response.StatusCode;
             if (statusCode == HttpStatusCode.NotFound)
                 throw new NotImplementedException();
@@ -59,9 +74,10 @@ namespace StoreClient
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                _sessionCredentials = JsonSerializer.Deserialize<SessionCredentials>(response.ToString(), options);
+                _sessionCredentials = JsonSerializer.Deserialize<SessionCredentials>(await response.Content.ReadAsStringAsync(), options);
                 return true;
             }
+            return false;
         }
     }
 }
