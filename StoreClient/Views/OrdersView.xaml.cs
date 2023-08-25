@@ -27,7 +27,7 @@ namespace StoreClient.Views
         public OrdersView(StoreRestClient restClient)
         {
             _restClient = restClient;
-            _ordersCache=new List<ORDER>();
+            _ordersCache = new List<ORDER>();
             InitializeComponent();
             Initialize();
             RefreshAsync();
@@ -99,7 +99,7 @@ namespace StoreClient.Views
         public async Task RefreshAsync()
         {
             var ordersList = await _restClient.GetOrders();
-            if(CheckCache(ordersList)) return;
+            if (CheckCache(ordersList)) return;
             _ordersCache = ordersList;
 
             OrdersListView.Items.Clear();
@@ -116,15 +116,15 @@ namespace StoreClient.Views
 
         private bool CheckCache(List<ORDER> ordersList)
         {
-            List<int>idsList=new List<int>();
+            List<int> idsList = new List<int>();
             _ordersCache.ForEach(item => idsList.Add(item.Id.Value));
-            foreach(var item in ordersList)
+            foreach (var item in ordersList)
             {
                 if (!idsList.Contains(item.Id.Value)) return false;
             }
             idsList = new List<int>();
             ordersList.ForEach(item => idsList.Add(item.Id.Value));
-            foreach(var item in _ordersCache)
+            foreach (var item in _ordersCache)
             {
                 if (!idsList.Contains(item.Id.Value)) return false;
             }

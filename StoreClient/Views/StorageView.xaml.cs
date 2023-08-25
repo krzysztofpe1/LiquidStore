@@ -22,9 +22,11 @@ namespace StoreClient.Views
     public partial class StorageView : UserControl
     {
         private StoreRestClient _restClient;
+        private List<STORAGE> _storageCache;
         public StorageView(StoreRestClient restClient)
         {
             _restClient = restClient;
+            _storageCache = new List<STORAGE>();
             InitializeComponent();
             Initialize();
             RefreshAsync();
@@ -72,12 +74,7 @@ namespace StoreClient.Views
         public async Task RefreshAsync()
         {
             var storageList = await _restClient.GetStorage();
-            /*StorageDataGrid.Items.Clear();
-            storageList.ForEach(item =>
-            {
-                //Console.WriteLine($"ID: {item.Id} Brand: {item.Brand} Name: {item.Name} Volume: {item.Volume} Cost: {item.Cost} Remaining: {item.Remaining}");
-                StorageDataGrid.Items.Add(item);
-            });*/
+            if (CheckCahce(storageList)) return;
             StorageDataGrid.ItemsSource = storageList;
         }
 
@@ -89,6 +86,7 @@ namespace StoreClient.Views
             var propName = ((BindingExpression)((DataGridCell)element.Parent).BindingGroup.BindingExpressions[0]).ResolvedSourcePropertyName;
             var propInfo = storageItem.GetType().GetProperties().ToList().FirstOrDefault(prop => prop.Name == propName);
             var propType = propInfo.PropertyType;
+            var initialValue = propInfo.GetValue(storageItem);
             if (propType == typeof(string))
                 propInfo.SetValue(storageItem, element.Text);
             else if (propType == typeof(int))
@@ -99,7 +97,25 @@ namespace StoreClient.Views
                 propInfo.SetValue(storageItem, double.Parse(element.Text));
             else if (propType == typeof(Enum))
                 propInfo.SetValue(storageItem, int.Parse(element.Text));
-            _restClient.SaveStorageItem(storageItem);
+            if (!_restClient.SaveStorageItem(storageItem))
+            {
+                propInfo.SetValue(storageItem, initialValue);
+                if (initialValue != null)
+                    element.Text = initialValue.ToString();
+                else
+                    element.Text = string.Empty;
+            }
+        }
+        private bool CheckCahce(List<STORAGE> storageList)
+        {
+            if (_storageCache.Count != storageList.Count) return false;
+            storageList.Sort();
+            _storageCache.Sort();
+            foreach (var twoItems in _storageCache.Zip(storageList, (cache, list) => new { Cache = cache, List = list }))
+            {
+                if (twoItems.Cache != twoItems.List) return false;
+            }
+            return true;
         }
     }
 }

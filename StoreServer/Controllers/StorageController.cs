@@ -28,7 +28,7 @@ namespace StoreServer.Controllers
         {
             try
             {
-                if (item.Id != null)
+                if (item.Id == null)
                 {
                     var index = _service.Insert(item);
                     return Created($"/storage?id={index}", "gowno");

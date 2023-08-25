@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Text.Json;
+using System.Net.Http.Headers;
 
 namespace StoreClient
 {
@@ -82,13 +83,14 @@ namespace StoreClient
             return false;
         }
 
-        public async Task<bool> SaveStorageItem(STORAGE item)
+        public bool SaveStorageItem(STORAGE item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/storage");
             var content = new StringContent(JsonSerializer.Serialize(item));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
-            var response = await _httpClient.SendAsync(httpMessage);
-            if (response.StatusCode == HttpStatusCode.OK) return true;
+            var response = _httpClient.SendAsync(httpMessage).Result;
+            if (response.StatusCode == HttpStatusCode.Created) return true;
             return false;
         }
     }
