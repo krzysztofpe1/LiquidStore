@@ -1,6 +1,7 @@
 ﻿using StoreClient.DatabaseModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +23,11 @@ namespace StoreClient.Views
     public partial class StorageView : UserControl
     {
         private StoreRestClient _restClient;
-        private List<STORAGE> _storageCache;
+        private ObservableCollection<STORAGE> _storageCache;
         public StorageView(StoreRestClient restClient)
         {
             _restClient = restClient;
-            _storageCache = new List<STORAGE>();
+            _storageCache = new ObservableCollection<STORAGE>();
             InitializeComponent();
             Initialize();
             RefreshAsync();
@@ -73,7 +74,7 @@ namespace StoreClient.Views
         }
         public async Task RefreshAsync()
         {
-            var storageList = await _restClient.GetStorage();
+            var storageList = new ObservableCollection<STORAGE>(await _restClient.GetStorage());
             if (CheckCache(storageList)) return;
             _storageCache = storageList;
             StorageDataGrid.ItemsSource = _storageCache;
@@ -109,13 +110,11 @@ namespace StoreClient.Views
                 else
                     element.Text = string.Empty;
             }
-            e.Row.Item=storageItem;
+            _storageCache.Last().CopyValues(storageItem);
         }
-        private bool CheckCache(List<STORAGE> storageList)
+        private bool CheckCache(ObservableCollection<STORAGE> storageList)
         {
             if (_storageCache.Count != storageList.Count) return false;
-            storageList.Sort();
-            _storageCache.Sort();
             foreach (var twoItems in _storageCache.Zip(storageList, (cache, list) => new { Cache = cache, List = list }))
             {
                 if (twoItems.Cache != twoItems.List) return false;
