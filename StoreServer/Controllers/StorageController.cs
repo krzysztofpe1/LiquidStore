@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using StoreServer.DatabaseModels;
 using StoreServer.Services;
 using StoreServer.Utils;
@@ -28,15 +29,19 @@ namespace StoreServer.Controllers
         {
             try
             {
-                if (item.Id == null)
+                if (item.Id.Value == 0)
                 {
-                    var index = _service.Insert(item);
-                    return Created($"/storage?id={index}", "gowno");
+                    item.Id = null;
+                    if (item.Volume == null) item.Volume = 0;
+                    if (item.Cost == null) item.Cost = 0;
+                    if (item.Remaining == null) item.Remaining = 0;
+                    var newItem = _service.Insert(item);
+                    return Created($"/storage?id={newItem.Id}", JsonConvert.SerializeObject(newItem));
                 }
                 else
                 {
-                    _service.Update(item);   
-                    return Created($"/storage?id={item.Id}", "gowno");
+                    _service.Update(item);
+                    return Created($"/storage?id={item.Id}", JsonConvert.SerializeObject(item));
                 }
             }
             catch (ApiException ex)

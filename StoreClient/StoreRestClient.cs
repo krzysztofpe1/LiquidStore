@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Text.Json;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace StoreClient
 {
@@ -30,7 +31,7 @@ namespace StoreClient
             {
                 PropertyNameCaseInsensitive = true
             };
-            var storageList = JsonSerializer.Deserialize<List<STORAGE>>(response, options);
+            var storageList = System.Text.Json.JsonSerializer.Deserialize<List<STORAGE>>(response, options);
             return storageList;
         }
 
@@ -41,7 +42,7 @@ namespace StoreClient
             {
                 PropertyNameCaseInsensitive = true
             };
-            var orderList = JsonSerializer.Deserialize<List<ORDER>>(response, options);
+            var orderList = System.Text.Json.JsonSerializer.Deserialize<List<ORDER>>(response, options);
             return orderList;
         }
         
@@ -76,20 +77,23 @@ namespace StoreClient
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                _sessionCredentials = JsonSerializer.Deserialize<SessionCredentials>(await response.Content.ReadAsStringAsync(), options);
+                _sessionCredentials = System.Text.Json.JsonSerializer.Deserialize<SessionCredentials>(await response.Content.ReadAsStringAsync(), options);
                 _sessionCredentials.Username = username;
                 return true;
             }
             return false;
         }
 
-        public bool SaveStorageItem(STORAGE item)
+        public bool SaveStorageItem(ref STORAGE item)
         {
+            if (item.Id == null) item.Id = 0;
+            //item.PopulateEmptyFields();
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/storage");
-            var content = new StringContent(JsonSerializer.Serialize(item));
+            var content = new StringContent(JsonConvert.SerializeObject(item));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
             var response = _httpClient.SendAsync(httpMessage).Result;
+            item = JsonConvert.DeserializeObject<STORAGE>(response.Content.ReadAsStringAsync().Result);
             if (response.StatusCode == HttpStatusCode.Created) return true;
             return false;
         }

@@ -74,8 +74,9 @@ namespace StoreClient.Views
         public async Task RefreshAsync()
         {
             var storageList = await _restClient.GetStorage();
-            if (CheckCahce(storageList)) return;
-            StorageDataGrid.ItemsSource = storageList;
+            if (CheckCache(storageList)) return;
+            _storageCache = storageList;
+            StorageDataGrid.ItemsSource = _storageCache;
         }
 
         private void StorageDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -83,10 +84,12 @@ namespace StoreClient.Views
             if (e.EditAction != DataGridEditAction.Commit) return;
             TextBox element = e.EditingElement as TextBox;
             STORAGE storageItem = element.DataContext as STORAGE;
+
             var propName = ((BindingExpression)((DataGridCell)element.Parent).BindingGroup.BindingExpressions[0]).ResolvedSourcePropertyName;
             var propInfo = storageItem.GetType().GetProperties().ToList().FirstOrDefault(prop => prop.Name == propName);
             var propType = propInfo.PropertyType;
             var initialValue = propInfo.GetValue(storageItem);
+
             if (propType == typeof(string))
                 propInfo.SetValue(storageItem, element.Text);
             else if (propType == typeof(int))
@@ -97,7 +100,8 @@ namespace StoreClient.Views
                 propInfo.SetValue(storageItem, double.Parse(element.Text));
             else if (propType == typeof(Enum))
                 propInfo.SetValue(storageItem, int.Parse(element.Text));
-            if (!_restClient.SaveStorageItem(storageItem))
+
+            if (!_restClient.SaveStorageItem(ref storageItem))
             {
                 propInfo.SetValue(storageItem, initialValue);
                 if (initialValue != null)
@@ -105,8 +109,9 @@ namespace StoreClient.Views
                 else
                     element.Text = string.Empty;
             }
+            e.Row.Item=storageItem;
         }
-        private bool CheckCahce(List<STORAGE> storageList)
+        private bool CheckCache(List<STORAGE> storageList)
         {
             if (_storageCache.Count != storageList.Count) return false;
             storageList.Sort();
