@@ -32,7 +32,7 @@ namespace StoreClient
         public MainWindow()
         {
             InitializeComponent();
-            _restClient = new StoreRestClient("http://127.0.0.1:5000");
+            _restClient = new StoreRestClient("http://84.10.162.134:5000");
             loginView = new LoginView(_restClient);
             
             MainContent.Content = loginView;

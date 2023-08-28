@@ -21,6 +21,9 @@ namespace StoreClient
         public StoreRestClient(string baseUrl)
         {
             _baseUrl = baseUrl;
+            #if (DEBUG)
+            _baseUrl = "http://127.0.0.1:5000";
+            #endif
             _httpClient = new HttpClient();
         }
 
@@ -48,6 +51,7 @@ namespace StoreClient
 
         public async Task<bool> CreateSession(string username, string password)
         {
+            var chujdupacipahuj = BCrypt.Net.BCrypt.HashPassword(password);
             var message = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/session");
             message.Headers.Add("username", username);
             message.Headers.Add("password", BCrypt.Net.BCrypt.HashPassword(password));
