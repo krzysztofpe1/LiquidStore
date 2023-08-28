@@ -1,5 +1,7 @@
 ﻿using StoceClient.DatabaseModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Windows.Documents;
 
 namespace StoreClient.DatabaseModels
 {
@@ -32,6 +34,18 @@ namespace StoreClient.DatabaseModels
                 if (value == "Zamówione") Status = OrderStatusMapping.ORDERED;
                 else if (value == "Przygotowane") Status = OrderStatusMapping.PREPARED;
                 else if (value == "Dostarczone") Status = OrderStatusMapping.DELIVERED;
+            }
+        }
+        public List<string> StatusOptions
+        {
+            get
+            {
+                return new List<string>()
+                {
+                    "Zamówione",
+                    "Przygotowane",
+                    "Dostarczone"
+                };
             }
         }
         public ORDER Order { get; set; }

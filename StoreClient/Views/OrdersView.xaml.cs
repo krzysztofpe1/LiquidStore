@@ -84,18 +84,36 @@ namespace StoreClient.Views
                 Width = 60
             };
             dataGrid.Columns.Add(textColumn);
-            textColumn = new DataGridTextColumn()
-            {
-                Header = "Status",
-                Binding = new Binding("StatusMapping"),
-                Width = 100
-            };
-            dataGrid.Columns.Add(textColumn);
+
+            // Add Status column
+            DataGridTemplateColumn statusColumn = new DataGridTemplateColumn();
+            statusColumn.Header = "Status";
+
+            // Cell Template (Non-editing mode)
+            FrameworkElementFactory nonEditingFactory = new FrameworkElementFactory(typeof(TextBlock));
+            nonEditingFactory.SetBinding(TextBlock.TextProperty, new Binding("StatusMapping"));
+            statusColumn.CellTemplate = new DataTemplate() { VisualTree = nonEditingFactory };
+
+            // Cell Editing Template (Editing mode)
+            FrameworkElementFactory editingFactory = new FrameworkElementFactory(typeof(ComboBox));
+            editingFactory.SetBinding(ComboBox.ItemsSourceProperty, new Binding("StatusOptions"));
+            editingFactory.SetBinding(ComboBox.SelectedItemProperty, new Binding("StatusMapping"));
+
+            statusColumn.CellEditingTemplate = new DataTemplate() { VisualTree = editingFactory };
+
+            dataGrid.Columns.Add(statusColumn);
 
             dataGrid.AutoGenerateColumns = false;
             dataGrid.ItemsSource = details;
+            dataGrid.CellEditEnding += OrderDetailsDataGrid_CellEditEnding;
             return dataGrid;
         }
+
+        private void OrderDetailsDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            
+        }
+
         public async Task RefreshAsync()
         {
             var ordersList = await _restClient.GetOrders();
