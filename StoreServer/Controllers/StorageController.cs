@@ -29,12 +29,8 @@ namespace StoreServer.Controllers
         {
             try
             {
-                if (item.Id.Value == 0)
+                if (item.Id == null)
                 {
-                    item.Id = null;
-                    if (item.Volume == null) item.Volume = 0;
-                    if (item.Cost == null) item.Cost = 0;
-                    if (item.Remaining == null) item.Remaining = 0;
                     var newItem = _service.Insert(item);
                     return Created($"/storage?id={newItem.Id}", JsonConvert.SerializeObject(newItem));
                 }

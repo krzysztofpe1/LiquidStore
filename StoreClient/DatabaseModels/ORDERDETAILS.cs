@@ -12,7 +12,7 @@ namespace StoreClient.DatabaseModels
         public string Name { get; set; }
         public int Volume { get; set; }
         public double Concentration { get; set; }
-        public OrderStatusMapping Status { get; set; }
+        public OrderStatusMapping Status { get; set; } = OrderStatusMapping.ORDERED;
         public string StatusMapping
         {
             get
@@ -48,6 +48,6 @@ namespace StoreClient.DatabaseModels
                 };
             }
         }
-        public ORDER Order { get; set; }
+        public int? OrderId { get; set; }
     }
 }

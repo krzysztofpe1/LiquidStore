@@ -111,17 +111,90 @@ namespace StoreClient.Views
 
         private void OrderDetailsDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            
+            var currentDataGrid = sender as DataGrid;
+            var oderId = ((ORDERDETAILS)currentDataGrid.Items[0]).OrderId;
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                if (e.Column is DataGridTemplateColumn templateColumn && templateColumn.CellEditingTemplate != null)
+                {
+                    ContentPresenter contentPresenter = e.EditingElement as ContentPresenter;
+                    if (contentPresenter == null) return;
+                    ComboBox comboBox = FindVisualChild<ComboBox>(contentPresenter);
+                    if (comboBox == null) return;
+                    string newValue = comboBox.SelectedItem as string;
+                    if (newValue == null) return;
+                    if (e.Row.DataContext is ORDERDETAILS editedItem)
+                    {
+                        string initialValue = editedItem.StatusMapping;
+                        editedItem.StatusMapping = newValue;
+                        if(editedItem.OrderId == null)editedItem.OrderId = oderId;
+                        if(!_restClient.SaveOrderDetailsItem(ref editedItem))
+                        {
+                            editedItem.StatusMapping = initialValue;
+                            //((string)comboBox.SelectedItem) = initialValue;
+                        }
+                    }
+
+                }
+                else
+                {
+                    TextBox element = e.EditingElement as TextBox;
+                    ORDERDETAILS odItem = element.DataContext as ORDERDETAILS;
+
+                    var propName = ((BindingExpression)((DataGridCell)element.Parent).BindingGroup.BindingExpressions[0]).ResolvedSourcePropertyName;
+                    var propInfo = odItem.GetType().GetProperties().ToList().FirstOrDefault(prop => prop.Name == propName);
+                    var propType = propInfo.PropertyType;
+                    var initialValue = propInfo.GetValue(odItem);
+
+                    if (propType == typeof(string))
+                        propInfo.SetValue(odItem, element.Text);
+                    else if (propType == typeof(int))
+                        propInfo.SetValue(odItem, int.Parse(element.Text));
+                    else if (propType == typeof(float))
+                        propInfo.SetValue(odItem, float.Parse(element.Text));
+                    else if (propType == typeof(double))
+                        propInfo.SetValue(odItem, double.Parse(element.Text));
+                    else if (propType == typeof(Enum))
+                        propInfo.SetValue(odItem, int.Parse(element.Text));
+
+                    if (odItem.OrderId == null) odItem.OrderId = oderId;
+                    if (!_restClient.SaveOrderDetailsItem(ref odItem))
+                    {
+                        propInfo.SetValue(odItem, initialValue);
+                        if (initialValue != null)
+                            element.Text = initialValue.ToString();
+                        else
+                            element.Text = string.Empty;
+                    }
+                }
+            }
         }
-
-        public async Task RefreshAsync()
+        private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
         {
-            var ordersList = await _restClient.GetOrders();
-            if (CheckCache(ordersList)) return;
-            _ordersCache = ordersList;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
 
+                if (child != null && child is T t)
+                {
+                    return t;
+                }
+                else
+                {
+                    T childOfChild = FindVisualChild<T>(child);
+                    if (childOfChild != null)
+                    {
+                        return childOfChild;
+                    }
+                }
+            }
+
+            return null;
+        }
+        private void PopulateOrdersListView()
+        {
             OrdersListView.Items.Clear();
-            ordersList.ForEach(order =>
+            _ordersCache.ForEach(order =>
             {
                 Expander expander = new Expander()
                 {
@@ -130,6 +203,20 @@ namespace StoreClient.Views
                 };
                 OrdersListView.Items.Add(expander);
             });
+        }
+
+        public async Task RefreshAsync(bool forceRefresh=false)
+        {
+            var ordersList = await _restClient.GetOrders();
+            if (forceRefresh)
+            {
+                _ordersCache = ordersList;
+                PopulateOrdersListView();
+            }
+            if (CheckCache(ordersList)) return;
+            _ordersCache = ordersList;
+
+            PopulateOrdersListView();
         }
 
         private bool CheckCache(List<ORDER> ordersList)

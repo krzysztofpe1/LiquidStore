@@ -2,7 +2,6 @@
 {
     public class ORDER
     {
-        [Required]
         public int? Id { get; set; }
         [StringLength(maximumLength: 100)]
         public string Comment { get; set; } = null!;

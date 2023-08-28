@@ -46,7 +46,7 @@ namespace StoreClient.Views
         }
         private void OrdersButton_Click(object sender, RoutedEventArgs e)
         {
-            _ordersView.RefreshAsync();
+            _ordersView.RefreshAsync((PagableContent.Content==_ordersView));
             PagableContent.Content = _ordersView;
         }
         private void UsersButton_Click(object sender, RoutedEventArgs e)

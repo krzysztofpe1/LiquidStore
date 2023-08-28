@@ -20,7 +20,7 @@ namespace StoreServer.Services
         public List<ORDER> Get()
         {
             var list = _dbContext.Orders
-                .Include(o =>o.Details)
+                .Include(o => o.Details)
                 .ToList();
             return list;
         }
@@ -28,33 +28,51 @@ namespace StoreServer.Services
         public ORDER? Get(int id)
         {
             return _dbContext.Orders
-                .Include(o=>o.Details)
+                .Include(o => o.Details)
                 .FirstOrDefault(item => item.Id == id);
         }
 
         public void Update(ORDER item)
         {
             if (item.Id == null)
-                throw new ApiException(HttpStatusCode.BadRequest, "Id cannot be null in insert Orders.");
+                throw new ApiException(HttpStatusCode.BadRequest, "Id cannot be null in update Orders.");
             var dbItem = Get(item.Id.Value);
             if (dbItem == null)
                 throw new ApiException(HttpStatusCode.BadRequest, $"Cannot find entry in Orders to update id: {item.Id}");
             _dbContext.Entry(dbItem).CurrentValues.SetValues(item);
             _dbContext.SaveChanges();
         }
+        public void Update(ORDERDETAILS item)
+        {
+            if (item.Id == null)
+                throw new ApiException(HttpStatusCode.BadRequest, "Id cannot be null in update OrderDetails.");
+            var dbItem = _dbContext.OrderDetails.FirstOrDefault(x=> x.Id == item.Id);
+            if (dbItem == null)
+                throw new ApiException(HttpStatusCode.BadRequest, $"Cannot find entry in Orders to update id: {item.Id}");
+            _dbContext.Entry(dbItem).CurrentValues.SetValues(item);
+            _dbContext.SaveChanges();
+        }
 
-        public void Insert(ORDER item)
+        public ORDER Insert(ORDER item)
         {
             if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert Order with id.");
-            _dbContext.Orders.Add(item);
+            var newItem = _dbContext.Orders.Add(item).Entity;
             _dbContext.SaveChanges();
+            return newItem;
+        }
+        public ORDERDETAILS Insert(ORDERDETAILS item)
+        {
+            if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert OrderDetails with id.");
+            var newItem = _dbContext.OrderDetails.Add(item).Entity;
+            _dbContext.SaveChanges();
+            return newItem;
         }
 
         public void Delete(int? id)
         {
             if (id == null)
                 throw new ApiException(HttpStatusCode.BadRequest, "You dumb fuck, id is null while deleting Orders item.");
-            _dbContext.Orders.Where(item=>item.Id == id).ExecuteDelete();
+            _dbContext.Orders.Where(item => item.Id == id).ExecuteDelete();
         }
     }
 }

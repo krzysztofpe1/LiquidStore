@@ -45,7 +45,7 @@ namespace StoreClient
             var orderList = System.Text.Json.JsonSerializer.Deserialize<List<ORDER>>(response, options);
             return orderList;
         }
-        
+
         public async Task<bool> CreateSession(string username, string password)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/session");
@@ -56,12 +56,12 @@ namespace StoreClient
             {
                 response = await _httpClient.SendAsync(message);
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 MessageBox.Show("Serwer nie odpowiada, skontaktuj się z właścicielem.", "Błąd połączenia z serwerem", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Błąd połączenia z serwerem", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
@@ -86,15 +86,31 @@ namespace StoreClient
 
         public bool SaveStorageItem(ref STORAGE item)
         {
-            if (item.Id == null) item.Id = 0;
-            //item.PopulateEmptyFields();
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/storage");
             var content = new StringContent(JsonConvert.SerializeObject(item));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
             var response = _httpClient.SendAsync(httpMessage).Result;
-            item = JsonConvert.DeserializeObject<STORAGE>(response.Content.ReadAsStringAsync().Result);
-            if (response.StatusCode == HttpStatusCode.Created) return true;
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                item = JsonConvert.DeserializeObject<STORAGE>(response.Content.ReadAsStringAsync().Result);
+                return true;
+            }
+            return false;
+        }
+
+        public bool SaveOrderDetailsItem(ref ORDERDETAILS item)
+        {
+            var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/order/details");
+            var content = new StringContent(JsonConvert.SerializeObject(item));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpMessage.Content = content;
+            var response = _httpClient.SendAsync(httpMessage).Result;
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                item = JsonConvert.DeserializeObject<ORDERDETAILS>(response.Content.ReadAsStringAsync().Result);
+                return true;
+            }
             return false;
         }
     }

@@ -23,6 +23,7 @@ namespace StoceClient.DatabaseModels
             if(Details.Count!=other.Details.Count)return false;
             return true;
         }
+        public int OrderId;
     }
 }
 
