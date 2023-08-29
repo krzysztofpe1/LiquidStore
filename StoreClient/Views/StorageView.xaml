@@ -23,5 +23,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
+        <CheckBox x:Name="ShowUsedCheckbox" Content="Pokaż Zużyte" HorizontalAlignment="Left" Height="15" Margin="16,0,0,0" VerticalAlignment="Center" Width="auto" Unchecked="ShowUsedStorage" Checked="HideUsedStorage"/>
     </Grid>
 </UserControl>

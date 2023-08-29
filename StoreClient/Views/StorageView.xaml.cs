@@ -91,5 +91,14 @@ namespace StoreClient.Views
             }
             return true;
         }
+
+        private void ShowUsedStorage(object sender, RoutedEventArgs e)
+        {
+            StorageDataGrid.ItemsSource = _storageCache.Where(item => item.Remaining > 0);
+        }
+        private void HideUsedStorage(object sender, RoutedEventArgs e)
+        {
+            StorageDataGrid.ItemsSource = _storageCache;
+        }
     }
 }
