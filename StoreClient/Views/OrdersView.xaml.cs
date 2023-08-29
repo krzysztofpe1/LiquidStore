@@ -30,7 +30,7 @@ namespace StoreClient.Views
             _ordersCache = new List<ORDER>();
             InitializeComponent();
             Initialize();
-            RefreshAsync();
+            RefreshAsync(true);
         }
         private async Task Initialize()
         {
@@ -208,14 +208,17 @@ namespace StoreClient.Views
         public async Task RefreshAsync(bool forceRefresh=false)
         {
             var ordersList = await _restClient.GetOrders();
+            if (!ShowDeliveredCheckBox.IsChecked.Value) ordersList = ordersList.Where(item =>
+            {
+                if(item.Details.Where(detail => detail.Status != OrderStatusMapping.DELIVERED).Count() == 0) return false;
+                return true;
+            }).ToList();
             if (forceRefresh)
             {
                 _ordersCache = ordersList;
                 PopulateOrdersListView();
             }
             if (CheckCache(ordersList)) return;
-            _ordersCache = ordersList;
-
             PopulateOrdersListView();
         }
 
@@ -234,6 +237,27 @@ namespace StoreClient.Views
                 if (!idsList.Contains(item.Id.Value)) return false;
             }
             return true;
+        }
+
+        private void ShowDeliveredCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var task = RefreshAsync(true);
+        }
+
+        private void ShowDeliveredCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var tast = RefreshAsync(true);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var item = new ORDER() { Comment = "NOWE ZAMÓWIENIE" };
+            if (_restClient.SaveOrder(item))
+            {
+                _ordersCache.Add(item);
+                var task = RefreshAsync(true);
+            }
+            else MessageBox.Show("Nie można było dodać zamówienia!", "Błąd serwera", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
     }
 }

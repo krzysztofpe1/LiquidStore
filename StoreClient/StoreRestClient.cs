@@ -27,28 +27,6 @@ namespace StoreClient
             _httpClient = new HttpClient();
         }
 
-        public async Task<List<STORAGE>> GetStorage()
-        {
-            var response = await _httpClient.GetStringAsync(_baseUrl + "/storage");
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var storageList = System.Text.Json.JsonSerializer.Deserialize<List<STORAGE>>(response, options);
-            return storageList;
-        }
-
-        public async Task<List<ORDER>> GetOrders()
-        {
-            var response = await _httpClient.GetStringAsync(_baseUrl + "/order");
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var orderList = System.Text.Json.JsonSerializer.Deserialize<List<ORDER>>(response, options);
-            return orderList;
-        }
-
         public async Task<bool> CreateSession(string username, string password)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/session");
@@ -86,7 +64,30 @@ namespace StoreClient
             }
             return false;
         }
+        #region get item
+        public async Task<List<STORAGE>> GetStorage()
+        {
+            var response = await _httpClient.GetStringAsync(_baseUrl + "/storage");
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var storageList = System.Text.Json.JsonSerializer.Deserialize<List<STORAGE>>(response, options);
+            return storageList;
+        }
 
+        public async Task<List<ORDER>> GetOrders()
+        {
+            var response = await _httpClient.GetStringAsync(_baseUrl + "/order");
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var orderList = System.Text.Json.JsonSerializer.Deserialize<List<ORDER>>(response, options);
+            return orderList;
+        }
+        #endregion
+        #region save item
         public bool SaveStorageItem(ref STORAGE item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/storage");
@@ -99,6 +100,17 @@ namespace StoreClient
                 item = JsonConvert.DeserializeObject<STORAGE>(response.Content.ReadAsStringAsync().Result);
                 return true;
             }
+            return false;
+        }
+
+        internal bool SaveOrder(ORDER item)
+        {
+            var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/order");
+            var content = new StringContent(JsonConvert.SerializeObject(item));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpMessage.Content = content;
+            var response = _httpClient.SendAsync(httpMessage).Result;
+            if (response.StatusCode == HttpStatusCode.Created) return true;
             return false;
         }
 
@@ -116,7 +128,8 @@ namespace StoreClient
             }
             return false;
         }
-
+        #endregion
+        #region delete item
         internal bool DeleteStorageItem(STORAGE item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Delete, _baseUrl + "/storage");
@@ -127,5 +140,16 @@ namespace StoreClient
             if (response.StatusCode == HttpStatusCode.OK) return true;
             return false;
         }
+        internal bool DeleteOrderDetailsItem(ORDERDETAILS item)
+        {
+            var httpMessage = new HttpRequestMessage(HttpMethod.Delete, _baseUrl + "/order/details");
+            var content = new StringContent(JsonConvert.SerializeObject(item));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpMessage.Content = content;
+            var respone = _httpClient.SendAsync(httpMessage).Result;
+            if (respone.StatusCode == HttpStatusCode.OK) return true;
+            return false;
+        }
+        #endregion
     }
 }

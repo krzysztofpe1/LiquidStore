@@ -93,6 +93,7 @@ namespace StoreClient.Views
                 _storageCache.Add(storageItem);
                 _storageCache.Add(new STORAGE());
             }
+            StorageDataGrid.Focus();
         }
         private bool CheckCache(ObservableCollection<STORAGE> storageList)
         {

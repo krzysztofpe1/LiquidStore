@@ -7,6 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <ListView x:Name="OrdersListView"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="19*" MaxHeight="60"/>
+            <RowDefinition Height="150*"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="OrdersListView" Grid.Row="1"/>
+        <Button Content="Dodaj" HorizontalAlignment="Left" Height="31" Margin="137,0,0,0" VerticalAlignment="Center" Width="100" Click="Button_Click"/>
+        <CheckBox x:Name="ShowDeliveredCheckBox" Content="Pokaż zrealizowane" HorizontalAlignment="Left" Height="17" Margin="10,0,0,0" VerticalAlignment="Center" Width="auto" Checked="ShowDeliveredCheckBox_Checked" Unchecked="ShowDeliveredCheckBox_Unchecked"/>
     </Grid>
 </UserControl>

@@ -28,7 +28,6 @@ namespace StoreClient.Views
         {
             _restClient = restClient;
             InitializeComponent();
-            LoggedIn = true;
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)

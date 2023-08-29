@@ -74,5 +74,24 @@ namespace StoreServer.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpDelete]
+        [Route("details")]
+        public ActionResult Delete([FromBody] ORDERDETAILS item)
+        {
+            try
+            {
+                if (item.Id == null) return BadRequest();
+                _service.Delete(item.Id);
+                return Ok();
+            }
+            catch (ApiException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
