@@ -8,14 +8,14 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="7*" MaxWidth="250"/>
             <ColumnDefinition Width="25*"/>
         </Grid.ColumnDefinitions>
         <Grid Background="LightGray" Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="19*"/>
-                <RowDefinition Height="19*"/>
-                <RowDefinition Height="19*"/>
+                <RowDefinition Height="19*" MaxHeight="60"/>
+                <RowDefinition Height="19*" MaxHeight="60"/>
+                <RowDefinition Height="19*" MaxHeight="60"/>
                 <RowDefinition Height="112*"/>
             </Grid.RowDefinitions>
             <Button Grid.Row="0" Content="Magazyn" Margin="3,5,3,5" Click="StorageButton_Click"></Button>
