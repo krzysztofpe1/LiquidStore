@@ -32,16 +32,26 @@ namespace StoreClient.Views
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            loginButton.IsEnabled = false;
-            loginTextBox.IsEnabled = false;
-            passwordTextBox.IsEnabled = false;
+            Login();
+        }
+        /// <summary>
+        /// This is the method to call, right after Butoon click or Enter pressed.
+        /// </summary>
+        private void Login()
+        {
             var login = loginTextBox.Text;
             var password = passwordTextBox.Password;
-            _loginCheckerThread = new Thread(()=>CheckLogin(login, password));
+            _loginCheckerThread = new Thread(() => CheckLogin(login, password));
             _loginCheckerThread.Start();
         }
         private void CheckLogin(string login, string password)
         {
+            Dispatcher.Invoke(() =>
+            {
+                loginButton.IsEnabled = false;
+                loginTextBox.IsEnabled = false;
+                passwordTextBox.IsEnabled = false;
+            });
             if (login.Length > 0 && password.Length > 0)
             {
                 Task<bool> task = _restClient.CreateSession(login, password);
@@ -65,6 +75,15 @@ namespace StoreClient.Views
                 loginTextBox.IsEnabled = true;
                 passwordTextBox.IsEnabled = true;
             });
+        }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                e.Handled = true;
+                Login();
+            }
         }
     }
 }

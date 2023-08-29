@@ -51,7 +51,6 @@ namespace StoreClient
 
         public async Task<bool> CreateSession(string username, string password)
         {
-            var chujdupacipahuj = BCrypt.Net.BCrypt.HashPassword(password);
             var message = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/session");
             message.Headers.Add("username", username);
             message.Headers.Add("password", BCrypt.Net.BCrypt.HashPassword(password));
