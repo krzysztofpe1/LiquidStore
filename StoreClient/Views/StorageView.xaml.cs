@@ -1,4 +1,5 @@
 ﻿using StoreClient.DatabaseModels;
+using StoreClient.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,43 +35,11 @@ namespace StoreClient.Views
         }
         private void Initialize()
         {
-            DataGridTextColumn textColumn;
-            textColumn = new DataGridTextColumn()
-            {
-                Header = "ID",
-                Binding = new Binding("Id")
-            };
-            StorageDataGrid.Columns.Add(textColumn);
-            textColumn = new DataGridTextColumn()
-            {
-                Header = "Marka",
-                Binding = new Binding("Brand")
-            };
-            StorageDataGrid.Columns.Add(textColumn);
-            textColumn = new DataGridTextColumn()
-            {
-                Header = "Nazwa",
-                Binding = new Binding("Name")
-            };
-            StorageDataGrid.Columns.Add(textColumn);
-            textColumn = new DataGridTextColumn()
-            {
-                Header = "Objętość",
-                Binding = new Binding("Volume")
-            };
-            StorageDataGrid.Columns.Add(textColumn);
-            textColumn = new DataGridTextColumn()
-            {
-                Header = "Koszt",
-                Binding = new Binding("Cost")
-            };
-            StorageDataGrid.Columns.Add(textColumn);
-            textColumn = new DataGridTextColumn()
-            {
-                Header = "Pozostało",
-                Binding = new Binding("Remaining")
-            };
-            StorageDataGrid.Columns.Add(textColumn);
+            var converter = new StorageDataGridRowColorConverter(5, 10);
+
+            Style rowStyle = new Style(typeof(DataGridRow));
+            rowStyle.Setters.Add(new Setter(DataGridRow.BackgroundProperty, new Binding("Remaining") { Converter = converter }));
+            StorageDataGrid.RowStyle = rowStyle;
         }
         public async Task RefreshAsync()
         {
@@ -78,6 +47,7 @@ namespace StoreClient.Views
             if (CheckCache(storageList)) return;
             _storageCache = storageList;
             StorageDataGrid.ItemsSource = _storageCache;
+            
         }
 
         private void StorageDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
