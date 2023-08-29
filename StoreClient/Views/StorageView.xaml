@@ -6,13 +6,17 @@
              xmlns:local="clr-namespace:StoreClient.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="19*" MaxHeight="60"/>
             <RowDefinition Height="150*"/>
         </Grid.RowDefinitions>
+
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <DataGrid x:Name="StorageDataGrid" CellEditEnding="StorageDataGrid_CellEditEnding" AutoGenerateColumns="False" CanUserAddRows="True" d:ItemsSource="{d:SampleData ItemCount=5}" Width="auto">
+            <DataGrid x:Name="StorageDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Width="auto"
+                      CellEditEnding="StorageDataGrid_CellEditEnding"
+                      PreviewKeyDown="StorageDataGrid_PreviewKeyDown">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Marka" Binding="{Binding Brand}"/>
@@ -23,6 +27,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
-        <CheckBox x:Name="ShowUsedCheckbox" Content="Pokaż Zużyte" HorizontalAlignment="Left" Height="15" Margin="16,0,0,0" VerticalAlignment="Center" Width="auto" Unchecked="ShowUsedStorage" Checked="HideUsedStorage"/>
+        <CheckBox x:Name="ShowUsedCheckbox" Content="Pokaż Zużyte" HorizontalAlignment="Left" Height="15" Margin="16,0,0,0" VerticalAlignment="Center" Width="auto" Unchecked="HideUsedStorage" Checked="ShowUsedStorage"/>
     </Grid>
 </UserControl>

@@ -32,6 +32,8 @@ namespace StoreClient.Views
             InitializeComponent();
             Initialize();
             RefreshAsync();
+            HideUsedStorage(null, null);
+            ShowUsedCheckbox.IsChecked = false;
         }
         private void Initialize()
         {
@@ -45,9 +47,13 @@ namespace StoreClient.Views
         {
             var storageList = new ObservableCollection<STORAGE>(await _restClient.GetStorage());
             if (CheckCache(storageList)) return;
+            storageList.Add(new STORAGE());
             _storageCache = storageList;
             StorageDataGrid.ItemsSource = _storageCache;
-            
+            if (ShowUsedCheckbox.IsChecked.Value)
+                ShowUsedStorage(null, null);
+            else
+                HideUsedStorage(null, null);
         }
 
         private void StorageDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -55,6 +61,7 @@ namespace StoreClient.Views
             if (e.EditAction != DataGridEditAction.Commit) return;
             TextBox element = e.EditingElement as TextBox;
             STORAGE storageItem = element.DataContext as STORAGE;
+            var newItem = storageItem.Id == null;
 
             var propName = ((BindingExpression)((DataGridCell)element.Parent).BindingGroup.BindingExpressions[0]).ResolvedSourcePropertyName;
             var propInfo = storageItem.GetType().GetProperties().ToList().FirstOrDefault(prop => prop.Name == propName);
@@ -80,7 +87,12 @@ namespace StoreClient.Views
                 else
                     element.Text = string.Empty;
             }
-            _storageCache.Last().CopyValues(storageItem);
+            if (newItem && _storageCache.Count > 0)
+            {
+                _storageCache.RemoveAt(_storageCache.Count - 1);
+                _storageCache.Add(storageItem);
+                _storageCache.Add(new STORAGE());
+            }
         }
         private bool CheckCache(ObservableCollection<STORAGE> storageList)
         {
@@ -94,11 +106,20 @@ namespace StoreClient.Views
 
         private void ShowUsedStorage(object sender, RoutedEventArgs e)
         {
-            StorageDataGrid.ItemsSource = _storageCache.Where(item => item.Remaining > 0);
+            StorageDataGrid.ItemsSource = _storageCache;
         }
         private void HideUsedStorage(object sender, RoutedEventArgs e)
         {
-            StorageDataGrid.ItemsSource = _storageCache;
+            StorageDataGrid.ItemsSource = _storageCache.Where(item => item.Remaining > 0 || item.Id == null).ToList();
+        }
+
+        private void StorageDataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                var item = ((STORAGE)StorageDataGrid.SelectedItem);
+                if (!_restClient.DeleteStorageItem(item)) MessageBox.Show("Wprowadzenie zmian nie powiodło się!\nProszę odśwież zakładkę.", "Błąd komunikacji z serwerem", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
     }
 }

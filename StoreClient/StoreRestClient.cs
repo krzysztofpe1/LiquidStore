@@ -21,9 +21,9 @@ namespace StoreClient
         public StoreRestClient(string baseUrl)
         {
             _baseUrl = baseUrl;
-            #if (DEBUG)
+#if (DEBUG)
             _baseUrl = "http://127.0.0.1:5000";
-            #endif
+#endif
             _httpClient = new HttpClient();
         }
 
@@ -114,6 +114,17 @@ namespace StoreClient
                 item = JsonConvert.DeserializeObject<ORDERDETAILS>(response.Content.ReadAsStringAsync().Result);
                 return true;
             }
+            return false;
+        }
+
+        internal bool DeleteStorageItem(STORAGE item)
+        {
+            var httpMessage = new HttpRequestMessage(HttpMethod.Delete, _baseUrl + "/storage");
+            var content = new StringContent(JsonConvert.SerializeObject(item));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpMessage.Content = content;
+            var response = _httpClient.SendAsync(httpMessage).Result;
+            if (response.StatusCode == HttpStatusCode.OK) return true;
             return false;
         }
     }
