@@ -174,5 +174,8 @@
   <ItemGroup>
     <Folder Include="Views\OrdersControls\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\StoreLogo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
