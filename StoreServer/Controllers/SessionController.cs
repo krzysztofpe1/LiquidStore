@@ -20,6 +20,22 @@ namespace StoreServer.Controllers
             _usersDbService = usersDbService;
         }
 
+        private static string GenerateRandomString(int size)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            string randomString = new string(Enumerable.Repeat(chars, size)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+            return randomString;
+        }
+
+        public class SessionNetworkObject
+        {
+            public string SessionToken { get; set; }
+            public string AccessKey { get; set; }
+            public DateTime ExpirationDate { get; set; }
+        }
+
         [HttpPost]
         public ActionResult<SessionNetworkObject> Get([FromHeader] string username, [FromHeader]string password)
         {
@@ -53,20 +69,6 @@ namespace StoreServer.Controllers
             if(sessionDbObj.SessionToken != sessionToken) return BadRequest();
             _sessionsDbService.Delete(sessionDbObj.Id);
             return Ok();
-        }
-        private static string GenerateRandomString(int size)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var random = new Random();
-            string randomString = new string(Enumerable.Repeat(chars, size)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-            return randomString;
-        }
-        public class SessionNetworkObject
-        {
-            public string SessionToken { get; set; }
-            public string AccessKey { get; set; }
-            public DateTime ExpirationDate { get; set; }
         }
     }
 }

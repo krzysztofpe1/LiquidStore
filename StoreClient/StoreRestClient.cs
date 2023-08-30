@@ -14,19 +14,22 @@ namespace StoreClient
 {
     public class StoreRestClient
     {
+        #region private vars
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
         private SessionCredentials _sessionCredentials;
-
+        #endregion
+        #region contructors
         public StoreRestClient(string baseUrl)
         {
             _baseUrl = baseUrl;
-#if (DEBUG)
+            #if (DEBUG)
             _baseUrl = "http://127.0.0.1:5000";
-#endif
+            #endif
             _httpClient = new HttpClient();
         }
-
+        #endregion
+        #region session
         public async Task<bool> CreateSession(string username, string password)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/session");
@@ -64,6 +67,7 @@ namespace StoreClient
             }
             return false;
         }
+        #endregion
         #region get item
         public async Task<List<STORAGE>> GetStorage()
         {

@@ -23,8 +23,11 @@ namespace StoreClient.Views
     /// </summary>
     public partial class StorageView : UserControl
     {
+        #region Private vars
         private StoreRestClient _restClient;
         private ObservableCollection<STORAGE> _storageCache;
+        #endregion
+        #region Constructors
         public StorageView(StoreRestClient restClient)
         {
             _restClient = restClient;
@@ -35,6 +38,8 @@ namespace StoreClient.Views
             HideUsedStorage(null, null);
             ShowUsedCheckbox.IsChecked = false;
         }
+        #endregion
+        #region Private Methods
         private void Initialize()
         {
             var converter = new StorageDataGridRowColorConverter(5, 10);
@@ -43,6 +48,17 @@ namespace StoreClient.Views
             rowStyle.Setters.Add(new Setter(DataGridRow.BackgroundProperty, new Binding("Remaining") { Converter = converter }));
             StorageDataGrid.RowStyle = rowStyle;
         }
+        private bool CheckCache(ObservableCollection<STORAGE> storageList)
+        {
+            if (_storageCache.Count != storageList.Count) return false;
+            foreach (var twoItems in _storageCache.Zip(storageList, (cache, list) => new { Cache = cache, List = list }))
+            {
+                if (twoItems.Cache != twoItems.List) return false;
+            }
+            return true;
+        }
+        #endregion
+        #region Public Methods
         public async Task RefreshAsync()
         {
             var storageList = new ObservableCollection<STORAGE>(await _restClient.GetStorage());
@@ -56,6 +72,8 @@ namespace StoreClient.Views
                 HideUsedStorage(null, null);
         }
 
+        #endregion
+        #region GUI Interactions
         private void StorageDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             if (e.EditAction != DataGridEditAction.Commit) return;
@@ -95,16 +113,6 @@ namespace StoreClient.Views
             }
             StorageDataGrid.Focus();
         }
-        private bool CheckCache(ObservableCollection<STORAGE> storageList)
-        {
-            if (_storageCache.Count != storageList.Count) return false;
-            foreach (var twoItems in _storageCache.Zip(storageList, (cache, list) => new { Cache = cache, List = list }))
-            {
-                if (twoItems.Cache != twoItems.List) return false;
-            }
-            return true;
-        }
-
         private void ShowUsedStorage(object sender, RoutedEventArgs e)
         {
             StorageDataGrid.ItemsSource = _storageCache;
@@ -113,7 +121,6 @@ namespace StoreClient.Views
         {
             StorageDataGrid.ItemsSource = _storageCache.Where(item => item.Remaining > 0 || item.Id == null).ToList();
         }
-
         private void StorageDataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
@@ -122,5 +129,6 @@ namespace StoreClient.Views
                 if (!_restClient.DeleteStorageItem(item)) MessageBox.Show("Wprowadzenie zmian nie powiodło się!\nProszę odśwież zakładkę.", "Błąd komunikacji z serwerem", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
+        #endregion
     }
 }

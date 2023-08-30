@@ -9,15 +9,21 @@ using System.Windows.Media;
 
 namespace StoreClient.Utils
 {
+
     internal class StorageDataGridRowColorConverter : IValueConverter
     {
+        #region Private vars
         private int _redValue = 5;
         private int _greenValue = 10;
+        #endregion
+        #region Constructors
         public StorageDataGridRowColorConverter(int redColorBelowValue, int greenColorAboveValue)
         {
             _redValue = redColorBelowValue;
             _greenValue = greenColorAboveValue;
         }
+        #endregion
+        #region Public Methods
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int intValue;
@@ -35,5 +41,6 @@ namespace StoreClient.Utils
         {
             throw new NotImplementedException();
         }
+        #endregion
     }
 }

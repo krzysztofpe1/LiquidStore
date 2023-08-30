@@ -24,12 +24,26 @@ namespace StoreServer.Services
                 .ToList();
             return list;
         }
-
         public ORDER? Get(int id)
         {
             return _dbContext.Orders
                 .Include(o => o.Details)
                 .FirstOrDefault(item => item.Id == id);
+        }
+
+        public ORDER Insert(ORDER item)
+        {
+            if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert Order with id.");
+            var newItem = _dbContext.Orders.Add(item).Entity;
+            _dbContext.SaveChanges();
+            return newItem;
+        }
+        public ORDERDETAILS Insert(ORDERDETAILS item)
+        {
+            if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert OrderDetails with id.");
+            var newItem = _dbContext.OrderDetails.Add(item).Entity;
+            _dbContext.SaveChanges();
+            return newItem;
         }
 
         public void Update(ORDER item)
@@ -53,26 +67,15 @@ namespace StoreServer.Services
             _dbContext.SaveChanges();
         }
 
-        public ORDER Insert(ORDER item)
-        {
-            if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert Order with id.");
-            var newItem = _dbContext.Orders.Add(item).Entity;
-            _dbContext.SaveChanges();
-            return newItem;
-        }
-        public ORDERDETAILS Insert(ORDERDETAILS item)
-        {
-            if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert OrderDetails with id.");
-            var newItem = _dbContext.OrderDetails.Add(item).Entity;
-            _dbContext.SaveChanges();
-            return newItem;
-        }
-
-        public void Delete(int? id)
+        public void DeleteOrder(int? id)
         {
             if (id == null)
                 throw new ApiException(HttpStatusCode.BadRequest, "You dumb fuck, id is null while deleting Orders item.");
             _dbContext.Orders.Where(item => item.Id == id).ExecuteDelete();
+        }
+        public void DeleteOrderDetail(int? id)
+        {
+
         }
     }
 }

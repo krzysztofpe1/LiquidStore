@@ -38,7 +38,7 @@ namespace StoreClient.Views
             PagableContent.Content = _storageView;
         }
         #endregion
-        #region Button Clicks
+        #region GUI Interactions
         private void StorageButton_Click(object sender, RoutedEventArgs e)
         {
             _storageView.RefreshAsync();

@@ -22,8 +22,11 @@ namespace StoreClient.Views
     /// </summary>
     public partial class OrdersView : UserControl
     {
+        #region Private vars
         private StoreRestClient _restClient;
         private List<ORDER> _ordersCache;
+        #endregion
+        #region Constructors
         public OrdersView(StoreRestClient restClient)
         {
             _restClient = restClient;
@@ -32,11 +35,26 @@ namespace StoreClient.Views
             Initialize();
             RefreshAsync(true);
         }
+        #endregion
+        #region Private Methods
         private async Task Initialize()
         {
             var ordersList = await _restClient.GetOrders();
             _ordersCache = ordersList;
             ordersList.ForEach(order =>
+            {
+                Expander expander = new Expander()
+                {
+                    Header = order.Comment,
+                    Content = InitializeDataGridOfDetails(order.Details)
+                };
+                OrdersListView.Items.Add(expander);
+            });
+        }
+        private void PopulateOrdersListView()
+        {
+            OrdersListView.Items.Clear();
+            _ordersCache.ForEach(order =>
             {
                 Expander expander = new Expander()
                 {
@@ -108,7 +126,64 @@ namespace StoreClient.Views
             dataGrid.CellEditEnding += OrderDetailsDataGrid_CellEditEnding;
             return dataGrid;
         }
+        private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
 
+                if (child != null && child is T t)
+                {
+                    return t;
+                }
+                else
+                {
+                    T childOfChild = FindVisualChild<T>(child);
+                    if (childOfChild != null)
+                    {
+                        return childOfChild;
+                    }
+                }
+            }
+
+            return null;
+        }
+        #endregion
+        #region Public Methods
+        public async Task RefreshAsync(bool forceRefresh = false)
+        {
+            var ordersList = await _restClient.GetOrders();
+            if (!ShowDeliveredCheckBox.IsChecked.Value) ordersList = ordersList.Where(item =>
+            {
+                if (item.Details.Where(detail => detail.Status != OrderStatusMapping.DELIVERED).Count() == 0) return false;
+                return true;
+            }).ToList();
+            if (forceRefresh)
+            {
+                _ordersCache = ordersList;
+                PopulateOrdersListView();
+            }
+            if (CheckCache(ordersList)) return;
+            PopulateOrdersListView();
+        }
+        private bool CheckCache(List<ORDER> ordersList)
+        {
+            List<int> idsList = new List<int>();
+            _ordersCache.ForEach(item => idsList.Add(item.Id.Value));
+            foreach (var item in ordersList)
+            {
+                if (!idsList.Contains(item.Id.Value)) return false;
+            }
+            idsList = new List<int>();
+            ordersList.ForEach(item => idsList.Add(item.Id.Value));
+            foreach (var item in _ordersCache)
+            {
+                if (!idsList.Contains(item.Id.Value)) return false;
+            }
+            return true;
+        }
+        #endregion
+        #region GUI Interactions
         private void OrderDetailsDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             var currentDataGrid = sender as DataGrid;
@@ -127,8 +202,8 @@ namespace StoreClient.Views
                     {
                         string initialValue = editedItem.StatusMapping;
                         editedItem.StatusMapping = newValue;
-                        if(editedItem.OrderId == null)editedItem.OrderId = oderId;
-                        if(!_restClient.SaveOrderDetailsItem(ref editedItem))
+                        if (editedItem.OrderId == null) editedItem.OrderId = oderId;
+                        if (!_restClient.SaveOrderDetailsItem(ref editedItem))
                         {
                             editedItem.StatusMapping = initialValue;
                             //((string)comboBox.SelectedItem) = initialValue;
@@ -169,86 +244,14 @@ namespace StoreClient.Views
                 }
             }
         }
-        private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-
-                if (child != null && child is T t)
-                {
-                    return t;
-                }
-                else
-                {
-                    T childOfChild = FindVisualChild<T>(child);
-                    if (childOfChild != null)
-                    {
-                        return childOfChild;
-                    }
-                }
-            }
-
-            return null;
-        }
-        private void PopulateOrdersListView()
-        {
-            OrdersListView.Items.Clear();
-            _ordersCache.ForEach(order =>
-            {
-                Expander expander = new Expander()
-                {
-                    Header = order.Comment,
-                    Content = InitializeDataGridOfDetails(order.Details)
-                };
-                OrdersListView.Items.Add(expander);
-            });
-        }
-
-        public async Task RefreshAsync(bool forceRefresh=false)
-        {
-            var ordersList = await _restClient.GetOrders();
-            if (!ShowDeliveredCheckBox.IsChecked.Value) ordersList = ordersList.Where(item =>
-            {
-                if(item.Details.Where(detail => detail.Status != OrderStatusMapping.DELIVERED).Count() == 0) return false;
-                return true;
-            }).ToList();
-            if (forceRefresh)
-            {
-                _ordersCache = ordersList;
-                PopulateOrdersListView();
-            }
-            if (CheckCache(ordersList)) return;
-            PopulateOrdersListView();
-        }
-
-        private bool CheckCache(List<ORDER> ordersList)
-        {
-            List<int> idsList = new List<int>();
-            _ordersCache.ForEach(item => idsList.Add(item.Id.Value));
-            foreach (var item in ordersList)
-            {
-                if (!idsList.Contains(item.Id.Value)) return false;
-            }
-            idsList = new List<int>();
-            ordersList.ForEach(item => idsList.Add(item.Id.Value));
-            foreach (var item in _ordersCache)
-            {
-                if (!idsList.Contains(item.Id.Value)) return false;
-            }
-            return true;
-        }
-
         private void ShowDeliveredCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             var task = RefreshAsync(true);
         }
-
         private void ShowDeliveredCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             var tast = RefreshAsync(true);
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var item = new ORDER() { Comment = "NOWE ZAMÓWIENIE" };
@@ -259,5 +262,6 @@ namespace StoreClient.Views
             }
             else MessageBox.Show("Nie można było dodać zamówienia!", "Błąd serwera", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
+        #endregion
     }
 }

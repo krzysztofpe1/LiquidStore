@@ -23,12 +23,13 @@ namespace StoreClient
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region private properties
+        #region Private vars
         private LoginView loginView;
         private MainView mainView;
         private Thread _loginWatcherThread;
         private StoreRestClient _restClient;
         #endregion
+        #region Constructors
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +41,8 @@ namespace StoreClient
             _loginWatcherThread.SetApartmentState(ApartmentState.STA);
             _loginWatcherThread.Start();
         }
+        #endregion
+        #region Private Methods
         private void LoginWatcher()
         {
             while (!loginView.LoggedIn)
@@ -56,5 +59,6 @@ namespace StoreClient
         {
             if(!loginView.LoggedIn)_loginWatcherThread.Abort();
         }
+        #endregion
     }
 }

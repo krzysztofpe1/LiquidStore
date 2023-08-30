@@ -81,7 +81,7 @@ namespace StoreServer.Controllers
             try
             {
                 if (item.Id == null) return BadRequest();
-                _service.Delete(item.Id);
+                _service.DeleteOrder(item.Id);
                 return Ok();
             }
             catch (ApiException ex)

@@ -16,6 +16,7 @@ namespace StoreServer.Services
         {
              _dbContext = dbContext;
         }
+
         public List<USER> Get()
         {
             return _dbContext.Users.ToList();
@@ -28,6 +29,14 @@ namespace StoreServer.Services
         {
             return _dbContext.Users.FirstOrDefault(x => x.Id == id);
         }
+
+        public void Insert(USER item)
+        {
+            if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert User with id.");
+            _dbContext.Users.Add(item);
+            _dbContext.SaveChanges();
+        }
+
         public void Update(USER item)
         {
             if (item.Id == null)
@@ -38,17 +47,12 @@ namespace StoreServer.Services
             _dbContext.Entry(dbItem).CurrentValues.SetValues(item);
             _dbContext.SaveChanges();
         }
+
         public void Delete(int? id)
         {
             if (id == null)
                 throw new ApiException(HttpStatusCode.BadRequest, "You dumb fuck, id is null while deleting User item.");
             _dbContext.Users.Where(item => item.Id == id).ExecuteDelete();
-            _dbContext.SaveChanges();
-        }
-        public void Insert(USER item)
-        {
-            if (item.Id != null) throw new ApiException(HttpStatusCode.BadRequest, "Cannot insert User with id.");
-            _dbContext.Users.Add(item);
             _dbContext.SaveChanges();
         }
     }
