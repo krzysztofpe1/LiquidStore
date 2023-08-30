@@ -7,7 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid Background="White">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                <GradientStop Color="White" Offset="1"/>
+                <GradientStop Color="#f6dbc6" Offset="0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="19*" MaxHeight="60"/>
             <RowDefinition Height="150*"/>
@@ -16,7 +22,14 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <DataGrid x:Name="StorageDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Width="auto"
                       CellEditEnding="StorageDataGrid_CellEditEnding"
-                      PreviewKeyDown="StorageDataGrid_PreviewKeyDown">
+                      PreviewKeyDown="StorageDataGrid_PreviewKeyDown"
+                      Background="#fff9f3">
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="Background" Value="#ac9c8b"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Marka" Binding="{Binding Brand}"/>
@@ -27,6 +40,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
-        <CheckBox x:Name="ShowUsedCheckbox" Content="Pokaż Zużyte" HorizontalAlignment="Left" Height="15" Margin="16,0,0,0" VerticalAlignment="Center" Width="auto" Unchecked="HideUsedStorage" Checked="ShowUsedStorage"/>
+        <CheckBox x:Name="ShowUsedCheckbox" Content="Pokaż Zużyte" Foreground="#8b9dac" FontFamily="Lato" FontSize="15" FontWeight="Medium" HorizontalAlignment="Left" Height="15" Margin="16,0,0,0" VerticalAlignment="Center" Width="auto" Unchecked="HideUsedStorage" Checked="ShowUsedStorage"/>
     </Grid>
 </UserControl>
