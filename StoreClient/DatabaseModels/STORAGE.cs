@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace StoreClient.DatabaseModels
+﻿namespace StoreClient.DatabaseModels
 {
     public class STORAGE
     {

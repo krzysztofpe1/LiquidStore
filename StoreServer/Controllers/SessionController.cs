@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StoreServer.DatabaseModels;
 using StoreServer.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StoreServer.Controllers
 {

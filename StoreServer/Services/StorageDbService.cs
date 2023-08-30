@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using StoreServer.DatabaseModels;
+﻿using StoreServer.DatabaseModels;
 using StoreServer.Utils;
 using System.Net;
 

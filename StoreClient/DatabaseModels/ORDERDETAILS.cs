@@ -1,7 +1,4 @@
-﻿using StoceClient.DatabaseModels;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Windows.Documents;
+﻿using System.Collections.Generic;
 
 namespace StoreClient.DatabaseModels
 {

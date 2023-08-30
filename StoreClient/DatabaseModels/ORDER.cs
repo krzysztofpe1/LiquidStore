@@ -1,11 +1,5 @@
 ﻿using StoreClient.DatabaseModels;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace StoceClient.DatabaseModels
 {
