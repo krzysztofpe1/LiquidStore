@@ -1,5 +1,6 @@
 ﻿using StoceClient.DatabaseModels;
 using StoreClient.DatabaseModels;
+using StoreClient.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -212,19 +213,9 @@ namespace StoreClient.Views
 
                     var propName = ((BindingExpression)((DataGridCell)element.Parent).BindingGroup.BindingExpressions[0]).ResolvedSourcePropertyName;
                     var propInfo = odItem.GetType().GetProperties().ToList().FirstOrDefault(prop => prop.Name == propName);
-                    var propType = propInfo.PropertyType;
                     var initialValue = propInfo.GetValue(odItem);
 
-                    if (propType == typeof(string))
-                        propInfo.SetValue(odItem, element.Text);
-                    else if (propType == typeof(int))
-                        propInfo.SetValue(odItem, int.Parse(element.Text));
-                    else if (propType == typeof(float))
-                        propInfo.SetValue(odItem, float.Parse(element.Text));
-                    else if (propType == typeof(double))
-                        propInfo.SetValue(odItem, double.Parse(element.Text));
-                    else if (propType == typeof(Enum))
-                        propInfo.SetValue(odItem, int.Parse(element.Text));
+                    propInfo.SetValue(odItem, FieldTypeConverter.Convert(propInfo, element.Text));
 
                     if (odItem.OrderId == null) odItem.OrderId = oderId;
                     if (!_restClient.SaveOrderDetailsItem(ref odItem))

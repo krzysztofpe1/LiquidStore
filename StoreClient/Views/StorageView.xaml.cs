@@ -76,19 +76,9 @@ namespace StoreClient.Views
 
             var propName = ((BindingExpression)((DataGridCell)element.Parent).BindingGroup.BindingExpressions[0]).ResolvedSourcePropertyName;
             var propInfo = storageItem.GetType().GetProperties().ToList().FirstOrDefault(prop => prop.Name == propName);
-            var propType = propInfo.PropertyType;
             var initialValue = propInfo.GetValue(storageItem);
 
-            if (propType == typeof(string))
-                propInfo.SetValue(storageItem, element.Text);
-            else if (propType == typeof(int))
-                propInfo.SetValue(storageItem, int.Parse(element.Text));
-            else if (propType == typeof(float))
-                propInfo.SetValue(storageItem, float.Parse(element.Text));
-            else if (propType == typeof(double))
-                propInfo.SetValue(storageItem, double.Parse(element.Text));
-            else if (propType == typeof(Enum))
-                propInfo.SetValue(storageItem, int.Parse(element.Text));
+            propInfo.SetValue(storageItem, FieldTypeConverter.Convert(propInfo, element.Text));
 
             if (!_restClient.SaveStorageItem(ref storageItem))
             {

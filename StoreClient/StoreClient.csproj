@@ -103,6 +103,7 @@
     <Compile Include="SessionCredentials.cs" />
     <Compile Include="StoreRestClient.cs" />
     <Compile Include="Utils\ColorScheme.cs" />
+    <Compile Include="Utils\FieldTypeConverter.cs" />
     <Compile Include="Utils\StorageDataGridRowColorConverter.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
