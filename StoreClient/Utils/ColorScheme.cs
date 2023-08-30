@@ -2,12 +2,12 @@
 
 namespace StoreClient.Utils
 {
-    internal class ColorScheme
+    internal static class ColorScheme
     {
-        public Color PrimaryColor { get; set; }
-        public Color SecondaryColor { get; set; }
-        public Color ButtonStanbyColor { get; set; }
-        public Color ButtonPressedColor { get; set; }
-        public Color ButtonHoverColor { get; set; }
+        public static Color PrimaryColor { get; set; } = Color.FromRgb(232, 245, 255); // #e8f5ff
+        public static Color SecondaryColor { get; set; } = Color.FromRgb(255,255,255); // None
+        public static Color ButtonStanbyColor { get; set; } = Color.FromRgb(66, 165, 245); // #42a5f5
+        public static Color ButtonPressedColor { get; set; } = Color.FromRgb(255, 255, 255); // None
+        public static Color ButtonHoverColor { get; set; } = Color.FromRgb(255, 255, 255); // None
     }
 }
