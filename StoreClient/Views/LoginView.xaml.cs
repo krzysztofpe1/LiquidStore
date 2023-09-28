@@ -24,7 +24,7 @@ namespace StoreClient.Views
             _restClient = restClient;
             InitializeComponent();
             #if(DEBUG)
-            //LoggedIn = true;
+            LoggedIn = true;
             #endif
         }
         #endregion

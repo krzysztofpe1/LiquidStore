@@ -4,23 +4,31 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StoreClient.Views"
+             xmlns:utils="clr-namespace:StoreClient.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Utils/CustomButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*" MaxWidth="250"/>
             <ColumnDefinition Width="25*"/>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="SidePanel" Background="#f6dbc6" Grid.Column="0">
+        <Grid x:Name="SidePanel" Background="{x:Static utils:ColorScheme.PrimaryColor}" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="19*" MaxHeight="60"/>
                 <RowDefinition Height="19*" MaxHeight="60"/>
                 <RowDefinition Height="19*" MaxHeight="60"/>
                 <RowDefinition Height="112*"/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Foreground="#fff9f3" Background="#ac9c8b" FontWeight="Medium" FontSize="18" FontFamily="Lato" Content="Magazyn" Margin="3,5,3,5" Click="StorageButton_Click" BorderBrush="#FF707070"/>
-            <Button Grid.Row="1" Foreground="#fff9f3" Background="#ac9c8b" FontWeight="Medium" FontSize="18" FontFamily="Lato" Content="Zamówienia" Margin="3,5,3,5" Click="OrdersButton_Click" BorderBrush="#FF707070"/>
-            <Button Grid.Row="2" Foreground="#fff9f3" Background="#ac9c8b" FontWeight="Medium" FontSize="18" FontFamily="Lato" Content="Użytkownicy" Margin="3,5,3,5" Click="UsersButton_Click" BorderBrush="#FF707070"/>
+            <Button Grid.Row="0" Style="{StaticResource MenuButtonStyle}" Content="Magazyn" Margin="3,5,3,5" Click="StorageButton_Click"/>
+            <Button Grid.Row="1" Style="{StaticResource MenuButtonStyle}" Content="Zamówienia" Margin="3,5,3,5" Click="OrdersButton_Click"/>
+            <Button Grid.Row="2" Style="{StaticResource MenuButtonStyle}" Content="Użytkownicy" Margin="3,5,3,5" Click="UsersButton_Click"/>
             <Image Grid.Row="3" Source="/StoreClient;component/Resources/StoreLogo.png" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10,10,10,10"/>
         </Grid>
         <ContentControl x:Name="PagableContent"  Grid.Column="2"/>

@@ -6,6 +6,13 @@
              xmlns:local="clr-namespace:StoreClient.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Utils/CustomButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
@@ -19,7 +26,7 @@
         </Grid.RowDefinitions>
         <ListView x:Name="OrdersListView" Grid.Row="1"/>
         <CheckBox x:Name="ShowDeliveredCheckBox" Content="Pokaż zrealizowane" Foreground="#8b9dac" FontFamily="Lato" FontSize="15" FontWeight="Medium" HorizontalAlignment="Left" Height="17" Margin="16,0,0,0" VerticalAlignment="Center" Width="auto" Checked="ShowDeliveredCheckBox_Checked" Unchecked="ShowDeliveredCheckBox_Unchecked"/>
-        <Button Content="+" FontSize="20" HorizontalAlignment="Right" VerticalContentAlignment="Top" Height="31" Width="36" Margin="0,0,50,0" VerticalAlignment="Center" Click="Add_Button_Click"/>
-        <Button Content="-" FontSize="20" HorizontalAlignment="Right" VerticalContentAlignment="Top" Height="31" Width="36" Margin="0,0,10,0" VerticalAlignment="Center" Click="Delete_Button_Click"/>
+        <Button Content="+" Style="{StaticResource OptionButtonStyle}" Height="31" Width="36" Margin="0,0,50,0" Click="Add_Button_Click"/>
+        <Button Content="-" Style="{StaticResource OptionButtonStyle}" Height="31" Width="36" Margin="0,0,10,0" Click="Delete_Button_Click"/>
     </Grid>
 </UserControl>

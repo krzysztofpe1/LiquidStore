@@ -3,6 +3,7 @@ using StoreClient.Utils;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -113,25 +114,26 @@ namespace StoreClient.Views
         }
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
-            var window = new StorageItemWindow("Dodaj produkt do Magazynu");
+            var window = new StorageItemWindow("Dodaj produkt do Magazynu", _restClient, this);
             window.Show();
-            while (window.ExitingStatus == WindowExitingStatus.Waiting)
-            {
-
-            }
-            if (window.ExitingStatus != WindowExitingStatus.Proceed)
-                return;
-            var item = window.GetItem();
-            if (!_restClient.SaveStorageItem(ref item))
-            {
-                Log.ShowServerErrorBox("Dodanie takiego produktu jest niemożliwe ¯\\\\_(ツ)_/¯\nProszę odśwież zakładkę.");
-                return;
-            }
-            _storageCache.Add(item);
         }
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            if (StorageDataGrid.SelectedCells.Count == 0)
+                Log.ShowUserErrorBox("Nie zaznaczyłeś przdmiotów do usunięcia.");
+            else
+            {
+                var listOfItemsToDelete = StorageDataGrid.SelectedCells.ToList();
+                var mbResult = MessageBox.Show("Na pewno chcesz usunąć element/y?", "Usunąć elementy?", MessageBoxButton.YesNo);
+                if (mbResult == MessageBoxResult.Yes)
+                {
+                    listOfItemsToDelete.ForEach(item =>
+                    {
+                        _restClient.DeleteStorageItem((STORAGE)item.Item);
+                    });
+                    RefreshAsync();
+                }
+            }
         }
         #endregion
     }

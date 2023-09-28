@@ -4,14 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StoreClient.Views"
+             xmlns:utils="clr-namespace:StoreClient.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#ac9c8b">
+    <Grid Background="{x:Static utils:ColorScheme.SecondaryColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="19*" MaxHeight="60"/>
             <RowDefinition Height="150*"/>
         </Grid.RowDefinitions>
-        <Grid Background="#f6dbc6" Grid.Row="1">
+        <Grid Background="{x:Static utils:ColorScheme.PrimaryColor}" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="111*"/>
                 <RowDefinition Height="145*"/>
@@ -30,6 +31,6 @@
             <TextBlock x:Name="informationTextBlock" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="30" Width="auto"/>
             <Image HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" MaxWidth="230" Source="/StoreClient;component/Resources/StoreLogo.png" Height="155" Width="155" Grid.RowSpan="2" Grid.Row="1"/>
         </Grid>
-        <Label Grid.Row="0" Content="Liquid Store" FontFamily="Lato" FontSize="25" FontWeight="Medium" Foreground="#fff9f3" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Width="213"/>
+        <Label Grid.Row="0" Content="Liquid Store" FontFamily="Lato" FontSize="25" FontWeight="Medium" Foreground="{x:Static utils:ColorScheme.PrimaryTextColor}" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Width="213"/>
     </Grid>
 </UserControl>
