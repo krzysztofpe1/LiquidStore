@@ -21,23 +21,26 @@ namespace StoreClient.Views
     /// </summary>
     public partial class StorageItemWindow : Window
     {
-        private STORAGE _storageItem;
+        #region Private vars
+        private StorageView _storageView;
+        private StoreRestClient _restClient;
         private int? _itemId = null;
+        #endregion
         public WindowExitingStatus ExitingStatus { get; private set; } = WindowExitingStatus.Waiting;
-        public StorageItemWindow(string title)
+        public StorageItemWindow(string title, StoreRestClient restClient, StorageView storageView)
         {
+            _restClient = restClient;
+            _storageView = storageView;
             Title = title;
             InitializeComponent();
         }
-        public StorageItemWindow(string title, STORAGE storageItem)
+        public StorageItemWindow(string title, StoreRestClient restClient, StorageView storageView, STORAGE storageItem)
         {
+            _restClient = restClient;
+            _storageView = storageView;
             Title = title;
             InitializeComponent();
             InitializeTextBoxes(storageItem);
-        }
-        public STORAGE GetItem()
-        {
-            return new STORAGE();
         }
 
         private void InitializeTextBoxes(STORAGE storageItem)
@@ -61,10 +64,15 @@ namespace StoreClient.Views
                     Cost = double.Parse(Cost.Text),
                     Remaining = int.Parse(Remaining.Text)
                 };
-                _storageItem = item;
+                if (!_restClient.SaveStorageItem(ref item))
+                {
+                    Log.ShowUserErrorBox("Coś poszło nie tak, sprobuj poprawić błędy, jeżeli widzisz jakieś.");
+                    return;
+                }
             }
             catch { return; }
             ExitingStatus = WindowExitingStatus.Proceed;
+            _storageView.RefreshAsync();
             this.Close();
         }
         private void CancelButton_Click(object sender, RoutedEventArgs e)
