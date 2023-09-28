@@ -104,13 +104,13 @@ namespace StoreClient.Views
         {
             StorageDataGrid.ItemsSource = _storageCache.Where(item => item.Remaining > 0 || item.Id == null).ToList();
         }
-        private void StorageDataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void StorageDataGridRow_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.Key == Key.Delete)
-            {
-                var item = ((STORAGE)StorageDataGrid.SelectedItem);
-                if (!_restClient.DeleteStorageItem(item)) Log.ShowServerErrorBox("Wprowadzenie zmian nie powiodło się!\nProszę odśwież zakładkę.");
-            }
+            if (StorageDataGrid.SelectedItems.Count != 1) return;
+            var item = (STORAGE)StorageDataGrid.SelectedItem;
+            if(item.Id == null) return;
+            var window = new StorageItemWindow("Zmień wartości pól Produktu w Magazynie", _restClient, this, item);
+            window.Show();
         }
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {

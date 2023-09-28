@@ -27,9 +27,9 @@
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <DataGrid x:Name="StorageDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Width="auto"
-                      CellEditEnding="StorageDataGrid_CellEditEnding"
-                      PreviewKeyDown="StorageDataGrid_PreviewKeyDown"
-                      Background="#fff9f3">
+                      PreviewMouseDoubleClick="StorageDataGridRow_DoubleClick"
+                      Background="#fff9f3"
+                      IsReadOnly="True">
                 <DataGrid.Resources>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
                         <Setter Property="Background" Value="#ac9c8b"/>

@@ -41,6 +41,7 @@ namespace StoreClient.Views
             Title = title;
             InitializeComponent();
             InitializeTextBoxes(storageItem);
+            _itemId = storageItem.Id;
         }
 
         private void InitializeTextBoxes(STORAGE storageItem)
