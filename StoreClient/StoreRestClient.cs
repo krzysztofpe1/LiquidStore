@@ -23,9 +23,6 @@ namespace StoreClient
         public StoreRestClient(string baseUrl)
         {
             _baseUrl = baseUrl;
-            #if (DEBUG)
-            _baseUrl = "http://127.0.0.1:5000";
-            #endif
             _httpClient = new HttpClient();
         }
         #endregion
