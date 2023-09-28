@@ -56,7 +56,6 @@ namespace StoreClient.Views
         {
             var storageList = new ObservableCollection<STORAGE>(await _restClient.GetStorage());
             if (CheckCache(storageList)) return;
-            storageList.Add(new STORAGE());
             _storageCache = storageList;
             StorageDataGrid.ItemsSource = _storageCache;
             if (ShowUsedCheckbox.IsChecked.Value)
@@ -109,8 +108,30 @@ namespace StoreClient.Views
             if (e.Key == Key.Delete)
             {
                 var item = ((STORAGE)StorageDataGrid.SelectedItem);
-                if (!_restClient.DeleteStorageItem(item)) MessageBox.Show("Wprowadzenie zmian nie powiodło się!\nProszę odśwież zakładkę.", "Błąd komunikacji z serwerem", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                if (!_restClient.DeleteStorageItem(item)) Log.ShowServerErrorBox("Wprowadzenie zmian nie powiodło się!\nProszę odśwież zakładkę.");
             }
+        }
+        private void Add_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new StorageItemWindow("Dodaj produkt do Magazynu");
+            window.Show();
+            while (window.ExitingStatus == WindowExitingStatus.Waiting)
+            {
+
+            }
+            if (window.ExitingStatus != WindowExitingStatus.Proceed)
+                return;
+            var item = window.GetItem();
+            if (!_restClient.SaveStorageItem(ref item))
+            {
+                Log.ShowServerErrorBox("Dodanie takiego produktu jest niemożliwe ¯\\\\_(ツ)_/¯\nProszę odśwież zakładkę.");
+                return;
+            }
+            _storageCache.Add(item);
+        }
+        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
         #endregion
     }

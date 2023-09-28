@@ -103,7 +103,9 @@
     <Compile Include="SessionCredentials.cs" />
     <Compile Include="StoreRestClient.cs" />
     <Compile Include="Utils\ColorScheme.cs" />
+    <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\FieldTypeConverter.cs" />
+    <Compile Include="Utils\Log.cs" />
     <Compile Include="Utils\StorageDataGridRowColorConverter.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -113,6 +115,9 @@
     </Compile>
     <Compile Include="Views\OrdersView.xaml.cs">
       <DependentUpon>OrdersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StorageItemWindow.xaml.cs">
+      <DependentUpon>StorageItemWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StorageView.xaml.cs">
       <DependentUpon>StorageView.xaml</DependentUpon>
@@ -138,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OrdersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StorageItemWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,9 +182,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\OrdersControls\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\StoreLogo.png" />
   </ItemGroup>

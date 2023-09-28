@@ -41,5 +41,7 @@
             </DataGrid>
         </ScrollViewer>
         <CheckBox x:Name="ShowUsedCheckbox" Content="Pokaż Zużyte" Foreground="#8b9dac" FontFamily="Lato" FontSize="15" FontWeight="Medium" HorizontalAlignment="Left" Height="15" Margin="16,0,0,0" VerticalAlignment="Center" Width="auto" Unchecked="HideUsedStorage" Checked="ShowUsedStorage"/>
+        <Button Content="+" FontSize="20" HorizontalAlignment="Right" VerticalContentAlignment="Top" Height="31" Width="36" Margin="0,0,50,0" VerticalAlignment="Center" Click="Add_Button_Click"/>
+        <Button Content="-" FontSize="20" HorizontalAlignment="Right" VerticalContentAlignment="Top" Height="31" Width="36" Margin="0,0,10,0" VerticalAlignment="Center" Click="Delete_Button_Click"/>
     </Grid>
 </UserControl>

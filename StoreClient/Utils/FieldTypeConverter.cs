@@ -21,7 +21,7 @@ namespace StoreClient.Utils
                 else if (propType == typeof(Enum))
                     return int.Parse(value);
                 return null;
-            }catch(Exception ex) { return null; }
+            }catch { return null; }
         }
     }
 }

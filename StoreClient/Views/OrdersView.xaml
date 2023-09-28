@@ -18,7 +18,8 @@
             <RowDefinition Height="150*"/>
         </Grid.RowDefinitions>
         <ListView x:Name="OrdersListView" Grid.Row="1"/>
-        <Button Content="Dodaj" HorizontalAlignment="Left" Height="31" Margin="197,0,0,0" VerticalAlignment="Center" Width="100" Click="Button_Click"/>
         <CheckBox x:Name="ShowDeliveredCheckBox" Content="Pokaż zrealizowane" Foreground="#8b9dac" FontFamily="Lato" FontSize="15" FontWeight="Medium" HorizontalAlignment="Left" Height="17" Margin="16,0,0,0" VerticalAlignment="Center" Width="auto" Checked="ShowDeliveredCheckBox_Checked" Unchecked="ShowDeliveredCheckBox_Unchecked"/>
+        <Button Content="+" FontSize="20" HorizontalAlignment="Right" VerticalContentAlignment="Top" Height="31" Width="36" Margin="0,0,50,0" VerticalAlignment="Center" Click="Add_Button_Click"/>
+        <Button Content="-" FontSize="20" HorizontalAlignment="Right" VerticalContentAlignment="Top" Height="31" Width="36" Margin="0,0,10,0" VerticalAlignment="Center" Click="Delete_Button_Click"/>
     </Grid>
 </UserControl>

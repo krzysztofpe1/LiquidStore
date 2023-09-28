@@ -237,7 +237,7 @@ namespace StoreClient.Views
         {
             var tast = RefreshAsync(true);
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
             var item = new ORDER() { Comment = "NOWE ZAMÓWIENIE" };
             if (_restClient.SaveOrder(item))
@@ -246,6 +246,10 @@ namespace StoreClient.Views
                 var task = RefreshAsync(true);
             }
             else MessageBox.Show("Nie można było dodać zamówienia!", "Błąd serwera", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        }
+        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
         #endregion
     }
