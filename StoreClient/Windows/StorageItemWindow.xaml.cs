@@ -88,8 +88,16 @@ namespace StoreClient.Views
         }
         private void ValidateNumericDoubleField(object sender, TextCompositionEventArgs e)
         {
-            if (!double.TryParse(e.Text, out _))
+            var temp = e.Text;
+            if (temp == ",")
+            {
+                var textBox = (TextBox)sender;
+                if (textBox.Text.Contains(","))
+                    e.Handled = true;
+            }
+            else if (!int.TryParse(temp, out _))
                 e.Handled = true;
+            
         }
     }
 }
