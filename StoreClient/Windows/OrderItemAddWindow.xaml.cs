@@ -1,4 +1,6 @@
-﻿using StoreClient.Controls;
+﻿using StoceClient.DatabaseModels;
+using StoreClient.Controls;
+using StoreClient.DatabaseModels;
 using StoreClient.Views;
 using System;
 using System.Collections.Generic;
@@ -45,6 +47,36 @@ namespace StoreClient.Windows
             {
                 OrderDetailsList.Items.Remove(item);
             }
+        }
+
+        private void ConfirmButton_Click(object sender, RoutedEventArgs e)
+        {
+            var listOfDetails = new List<ORDERDETAILS>();
+            foreach(var item in OrderDetailsList.Items)
+            {
+                var myActualItem = (OrderDetailsItemAddControl)item;
+                var productId = myActualItem.GetProductId();
+                //var dbProduct = _restClient.GetStorage().Result.FirstOrDefault(dbItem => dbItem.Id == productId);
+
+                var volume = myActualItem.GetVolume();
+                var detailsItem = new ORDERDETAILS()
+                {
+                    /*Brand = dbProduct.Brand,
+                    Name = dbProduct.Name,*/
+                    Volume = volume
+                };
+                listOfDetails.Add(detailsItem);
+            }
+            var orderItem = new ORDER()
+            {
+                Comment = Comment.Text,
+                Details = listOfDetails
+            };
+
+        }
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

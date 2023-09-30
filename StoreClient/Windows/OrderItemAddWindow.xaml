@@ -7,7 +7,9 @@
         xmlns:controls="clr-namespace:StoreClient.Controls"
         xmlns:utils="clr-namespace:StoreClient.Utils"
         mc:Ignorable="d"
-        Title="Edytuj zamówienie" Height="450" Width="800">
+        Title="Edytuj zamówienie"
+        Height="450" Width="800"
+        MinHeight="450" MinWidth="800">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,15 +27,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="19*" MaxHeight="60"/>
             <RowDefinition Height="135*"/>
-            <RowDefinition Height="15*"/>
+            <RowDefinition Height="15*" MaxHeight="47"/>
         </Grid.RowDefinitions>
         <Label Content="Zamówienie:" Foreground="#8b9dac" FontFamily="Lato" FontSize="15" FontWeight="Medium" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
-        <TextBox HorizontalAlignment="Left" Margin="111,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120"/>
+        <TextBox x:Name="Comment" HorizontalAlignment="Left" Margin="111,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120"/>
         <ListView x:Name="OrderDetailsList" Grid.Row="1"/>
-        <Button Content="+" Style="{StaticResource OptionButtonStyle}" Height="31" Width="36" Margin="714,0,0,0" Click="Add_Button_Click" HorizontalAlignment="Left"/>
-        <Button Content="-" Style="{StaticResource OptionButtonStyle}" Height="31" Width="36" Margin="754,0,0,0" Click="Delete_Button_Click" HorizontalAlignment="Left"/>
-        <Button Content="Anuluj" HorizontalAlignment="Left" Margin="752,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
-        <Button Content="Zatwierdź" HorizontalAlignment="Left" Margin="691,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
+        <Button Content="+" Style="{StaticResource OptionButtonStyle}" Height="31" Width="36" Margin="0,0,50,0" Click="Add_Button_Click" HorizontalAlignment="Right"/>
+        <Button Content="-" Style="{StaticResource OptionButtonStyle}" Height="31" Width="36" Margin="0,0,10,0" Click="Delete_Button_Click" HorizontalAlignment="Right"/>
+        <Button Content="Anuluj" HorizontalAlignment="Right" Margin="0,0,10,0" Grid.Row="2" VerticalAlignment="Center" Click="CancelButton_Click"/>
+        <Button Content="Zatwierdź" HorizontalAlignment="Right" Margin="0, 0, 53, 0" Grid.Row="2" VerticalAlignment="Center" Click="ConfirmButton_Click"/>
 
     </Grid>
 </Window>

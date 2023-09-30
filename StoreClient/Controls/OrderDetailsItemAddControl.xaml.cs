@@ -33,13 +33,21 @@ namespace StoreClient.Controls
             foreach (var item in storage)
             {
                 string result = item.Brand + " " + item.Name;
-                ListViewItem listItem = new ListViewItem()
+                ComboBoxItem listItem = new ComboBoxItem()
                 {
                     Content = result,
                     Tag = item.Id
                 };
                 ItemChoice.Items.Add(listItem);
             }
+        }
+        public int GetProductId()
+        {
+            return int.Parse(((ComboBoxItem)ItemChoice.SelectedItem).Tag.ToString());
+        }
+        public int GetVolume()
+        {
+            return int.Parse(Volume.Text);
         }
     }
 }
