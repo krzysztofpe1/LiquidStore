@@ -1,0 +1,39 @@
+﻿<Window x:Class="StoreClient.Windows.OrderItemAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StoreClient.Windows"
+        xmlns:controls="clr-namespace:StoreClient.Controls"
+        xmlns:utils="clr-namespace:StoreClient.Utils"
+        mc:Ignorable="d"
+        Title="Edytuj zamówienie" Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Utils/CustomButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                <GradientStop Color="White" Offset="1"/>
+                <GradientStop Color="{x:Static utils:ColorScheme.PrimaryTrueColor}" Offset="0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="19*" MaxHeight="60"/>
+            <RowDefinition Height="135*"/>
+            <RowDefinition Height="15*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Zamówienie:" Foreground="#8b9dac" FontFamily="Lato" FontSize="15" FontWeight="Medium" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+        <TextBox HorizontalAlignment="Left" Margin="111,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120"/>
+        <ListView x:Name="OrderDetailsList" Grid.Row="1"/>
+        <Button Content="+" Style="{StaticResource OptionButtonStyle}" Height="31" Width="36" Margin="714,0,0,0" Click="Add_Button_Click" HorizontalAlignment="Left"/>
+        <Button Content="-" Style="{StaticResource OptionButtonStyle}" Height="31" Width="36" Margin="754,0,0,0" Click="Delete_Button_Click" HorizontalAlignment="Left"/>
+        <Button Content="Anuluj" HorizontalAlignment="Left" Margin="752,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
+        <Button Content="Zatwierdź" HorizontalAlignment="Left" Margin="691,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
+
+    </Grid>
+</Window>

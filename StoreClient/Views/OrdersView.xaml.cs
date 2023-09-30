@@ -1,6 +1,7 @@
 ﻿using StoceClient.DatabaseModels;
 using StoreClient.DatabaseModels;
 using StoreClient.Utils;
+using StoreClient.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -239,13 +240,8 @@ namespace StoreClient.Views
         }
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
-            var item = new ORDER() { Comment = "NOWE ZAMÓWIENIE" };
-            if (_restClient.SaveOrder(item))
-            {
-                _ordersCache.Add(item);
-                var task = RefreshAsync(true);
-            }
-            else MessageBox.Show("Nie można było dodać zamówienia!", "Błąd serwera", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            var window = new OrderItemAddWindow(_restClient, this);
+            window.Show();
         }
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {

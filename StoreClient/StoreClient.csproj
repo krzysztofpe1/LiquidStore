@@ -96,9 +96,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\OrderDetailsItemAddControl.xaml.cs">
+      <DependentUpon>OrderDetailsItemAddControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DatabaseModels\ORDER.cs" />
     <Compile Include="DatabaseModels\ORDERDETAILS.cs" />
-    <Compile Include="DatabaseModels\OrderStatusMapping.cs" />
+    <Compile Include="Utils\OrderStatusMapping.cs" />
     <Compile Include="DatabaseModels\STORAGE.cs" />
     <Compile Include="SessionCredentials.cs" />
     <Compile Include="StoreRestClient.cs" />
@@ -116,12 +119,19 @@
     <Compile Include="Views\OrdersView.xaml.cs">
       <DependentUpon>OrdersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\OrderItemAddWindow.xaml.cs">
+      <DependentUpon>OrderItemAddWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\StorageItemWindow.xaml.cs">
       <DependentUpon>StorageItemWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StorageView.xaml.cs">
       <DependentUpon>StorageView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\OrderDetailsItemAddControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -149,6 +159,10 @@
     <Page Include="Views\OrdersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\OrderItemAddWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\StorageItemWindow.xaml">
       <SubType>Designer</SubType>

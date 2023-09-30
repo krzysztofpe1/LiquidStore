@@ -6,6 +6,7 @@ namespace StoreClient.Utils
     public static class ColorScheme
     {
         public static SolidColorBrush PrimaryColor { get; set; } = GenerateBrushFromHex("f6dbc6");
+        public static Color PrimaryTrueColor { get; set; } = Color.FromRgb(246, 219, 198);
         public static SolidColorBrush SecondaryColor { get; set; } = GenerateBrushFromHex("ac9c8b");
         public static SolidColorBrush PrimaryTextColor { get; set; } = GenerateBrushFromHex("fff9f3");
         public static SolidColorBrush ButtonStanbyColor { get; set; } = GenerateBrushFromHex("ac9c8b");
