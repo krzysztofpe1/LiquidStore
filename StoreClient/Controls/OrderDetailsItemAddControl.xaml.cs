@@ -29,7 +29,7 @@ namespace StoreClient.Controls
         }
         private async Task InitializeItemChoiceList()
         {
-            var storage = await _restClient.GetStorage();
+            var storage = (await _restClient.GetStorage()).Where(item => item.Remaining > 5);
             foreach (var item in storage)
             {
                 string result = item.Brand + " " + item.Name;

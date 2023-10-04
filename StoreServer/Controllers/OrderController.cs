@@ -57,12 +57,12 @@ namespace StoreServer.Controllers
                 if (item.Id == null)
                 {
                     var newItem = _service.Insert(item);
-                    return Created($"/order?id={newItem.Id}", JsonConvert.SerializeObject(newItem));
+                    return Created($"/order/details?id={newItem.Id}", JsonConvert.SerializeObject(newItem));
                 }
                 else
                 {
                     _service.Update(item);
-                    return Created($"/order?id={item.Id}", JsonConvert.SerializeObject(item));
+                    return Created($"/order/details?id={item.Id}", JsonConvert.SerializeObject(item));
                 }
             }
             catch (ApiException ex)

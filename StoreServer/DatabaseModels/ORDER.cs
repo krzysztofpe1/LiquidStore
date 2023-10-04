@@ -6,6 +6,6 @@
         [StringLength(maximumLength: 100)]
         public string Comment { get; set; } = null!;
 
-        public IEnumerable<ORDERDETAILS> Details { get; set; } = null!;
+        public IEnumerable<ORDERDETAILS>? Details { get; set; } = null!;
     }
 }

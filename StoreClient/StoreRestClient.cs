@@ -104,14 +104,48 @@ namespace StoreClient
             return false;
         }
 
-        internal bool SaveOrder(ORDER item)
+        internal bool SaveOrder(ref ORDER item)
         {
+            if (item.Details != null)
+            {
+                var tempItem = new ORDER
+                {
+                    Id = item.Id,
+                    Comment = item.Comment
+                };
+                SaveOrder(ref tempItem);
+                item.Id = tempItem.Id;
+                if(item.Id == null)
+                    return false;
+                foreach(var detail in item.Details)
+                {
+                    detail.OrderId = tempItem.Id;
+                    var newItem = new ORDERDETAILS()
+                    {
+                        Id = detail.Id,
+                        Brand = detail.Brand,
+                        Name = detail.Name,
+                        Volume = detail.Volume,
+                        Concentration = detail.Concentration,
+                        Status = detail.Status,
+                        OrderId = detail.OrderId,
+                    };
+                    SaveOrderDetailsItem(ref newItem);
+                    if(newItem.Id == null)
+                        return false;
+                }
+                return true;
+            }
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/order");
             var content = new StringContent(JsonConvert.SerializeObject(item));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
             var response = _httpClient.SendAsync(httpMessage).Result;
-            if (response.StatusCode == HttpStatusCode.Created) return true;
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                item = JsonConvert.DeserializeObject<ORDER>(response.Content.ReadAsStringAsync().Result);
+                return true;
+            }
             return false;
         }
 

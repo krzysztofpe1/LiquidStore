@@ -1,6 +1,7 @@
 ﻿using StoceClient.DatabaseModels;
 using StoreClient.Controls;
 using StoreClient.DatabaseModels;
+using StoreClient.Utils;
 using StoreClient.Views;
 using System;
 using System.Collections.Generic;
@@ -49,20 +50,25 @@ namespace StoreClient.Windows
             }
         }
 
-        private void ConfirmButton_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
+            if (Comment.Text == "")
+            {
+                Log.ShowUserErrorBox("Wpisz nazwę zamówienia.");
+                return;
+            }
             var listOfDetails = new List<ORDERDETAILS>();
             foreach(var item in OrderDetailsList.Items)
             {
                 var myActualItem = (OrderDetailsItemAddControl)item;
                 var productId = myActualItem.GetProductId();
-                //var dbProduct = _restClient.GetStorage().Result.FirstOrDefault(dbItem => dbItem.Id == productId);
+                var dbProduct = (await _restClient.GetStorage()).FirstOrDefault(dbItem => dbItem.Id == productId);
 
                 var volume = myActualItem.GetVolume();
                 var detailsItem = new ORDERDETAILS()
                 {
-                    /*Brand = dbProduct.Brand,
-                    Name = dbProduct.Name,*/
+                    Brand = dbProduct.Brand,
+                    Name = dbProduct.Name,
                     Volume = volume
                 };
                 listOfDetails.Add(detailsItem);
@@ -72,7 +78,13 @@ namespace StoreClient.Windows
                 Comment = Comment.Text,
                 Details = listOfDetails
             };
-
+            if (!_restClient.SaveOrder(ref orderItem))
+            {
+                Log.ShowServerErrorBox("Coś poszło nie tak podczas przesyłania zamówienia na serwer. Spróbuj ponownie.");
+                return;
+            }
+            _ordersView.RefreshAsync(true);
+            Close();
         }
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
