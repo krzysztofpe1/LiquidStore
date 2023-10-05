@@ -175,6 +175,16 @@ namespace StoreClient
             if (response.StatusCode == HttpStatusCode.OK) return true;
             return false;
         }
+        internal bool DeleteOrder(ORDER item)
+        {
+            var httpMessage = new HttpRequestMessage(HttpMethod.Delete, _baseUrl + "/order");
+            var content = new StringContent(JsonConvert.SerializeObject(item));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpMessage.Content = content;
+            var respone = _httpClient.SendAsync(httpMessage).Result;
+            if (respone.StatusCode == HttpStatusCode.OK) return true;
+            return false;
+        }
         internal bool DeleteOrderDetailsItem(ORDERDETAILS item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Delete, _baseUrl + "/order/details");

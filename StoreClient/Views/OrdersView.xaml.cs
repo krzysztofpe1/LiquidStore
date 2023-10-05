@@ -42,6 +42,7 @@ namespace StoreClient.Views
                 Expander expander = new Expander()
                 {
                     Header = order.Comment,
+                    Tag = order.Id,
                     Content = InitializeDataGridOfDetails(order.Details)
                 };
                 OrdersListView.Items.Add(expander);
@@ -55,6 +56,7 @@ namespace StoreClient.Views
                 Expander expander = new Expander()
                 {
                     Header = order.Comment,
+                    Tag = order.Id,
                     Content = InitializeDataGridOfDetails(order.Details)
                 };
                 OrdersListView.Items.Add(expander);
@@ -243,9 +245,17 @@ namespace StoreClient.Views
             var window = new OrderItemAddWindow(_restClient, this);
             window.Show();
         }
-        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        private async void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            var expanders = OrdersListView.SelectedItems;
+            foreach (var expander in expanders)
+            {
+                var exp = (Expander)expander;
+                var order = (await _restClient.GetOrders()).FirstOrDefault(item => item.Id == int.Parse(exp.Tag.ToString()));
+                if (!_restClient.DeleteOrder(order))
+                    Log.ShowServerErrorBox($"Nie udało się usunąć zamówienia: {order.Comment}");
+            }
+            RefreshAsync(true);
         }
         #endregion
     }
