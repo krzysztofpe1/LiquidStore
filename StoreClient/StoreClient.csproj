@@ -122,6 +122,9 @@
     <Compile Include="Windows\OrderItemAddWindow.xaml.cs">
       <DependentUpon>OrderItemAddWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\OrderItemEditWindow.xaml.cs">
+      <DependentUpon>OrderItemEditWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\StorageItemWindow.xaml.cs">
       <DependentUpon>StorageItemWindow.xaml</DependentUpon>
     </Compile>
@@ -163,6 +166,10 @@
     <Page Include="Windows\OrderItemAddWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\OrderItemEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\StorageItemWindow.xaml">
       <SubType>Designer</SubType>
