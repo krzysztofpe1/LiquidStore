@@ -12,6 +12,6 @@
             <ComboBoxItem Name="V50" Content="50"/>
             <ComboBoxItem Name="V100" Content="100"/>
         </ComboBox>
-        <TextBox x:Name="Concentration" HorizontalAlignment="Left" Margin="380,12,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="Concentration" HorizontalAlignment="Left" Margin="380,12,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" PreviewTextInput="ValidateNumericIntField"/>
     </Grid>
 </UserControl>

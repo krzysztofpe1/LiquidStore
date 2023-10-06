@@ -20,13 +20,28 @@ namespace StoreClient.Controls
     /// </summary>
     public partial class OrderDetailsItemAddControl : UserControl
     {
-        private StoreRestClient _restClient { get; }
+        #region Private cars
+        private StoreRestClient _restClient;
+        #endregion
+        #region Constructor
         public OrderDetailsItemAddControl(StoreRestClient restClient)
         {
             _restClient = restClient;
             InitializeComponent();
             InitializeItemChoiceList();
         }
+        #endregion
+        #region Public Methods
+        public int GetProductId()
+        {
+            return int.Parse(((ComboBoxItem)ItemChoice.SelectedItem).Tag.ToString());
+        }
+        public int GetVolume()
+        {
+            return int.Parse(Volume.Text);
+        }
+        #endregion
+        #region Private Methods
         private async Task InitializeItemChoiceList()
         {
             var storage = (await _restClient.GetStorage()).Where(item => item.Remaining > 5);
@@ -41,13 +56,13 @@ namespace StoreClient.Controls
                 ItemChoice.Items.Add(listItem);
             }
         }
-        public int GetProductId()
+        #endregion
+        #region GUI Interactions
+        private void ValidateNumericIntField(object sender, TextCompositionEventArgs e)
         {
-            return int.Parse(((ComboBoxItem)ItemChoice.SelectedItem).Tag.ToString());
+            if (!int.TryParse(e.Text, out _))
+                e.Handled = true;
         }
-        public int GetVolume()
-        {
-            return int.Parse(Volume.Text);
-        }
+        #endregion
     }
 }
