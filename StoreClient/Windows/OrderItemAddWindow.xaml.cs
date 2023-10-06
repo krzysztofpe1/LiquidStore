@@ -5,6 +5,7 @@ using StoreClient.Utils;
 using StoreClient.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,32 +25,41 @@ namespace StoreClient.Windows
     /// </summary>
     public partial class OrderItemAddWindow : Window
     {
+        #region Private vars
         private StoreRestClient _restClient;
         private OrdersView _ordersView;
+        private ObservableCollection<OrderDetailsItemAddControl> _ordersDetailsList;
+        #endregion
+        #region Contructor
         public OrderItemAddWindow(StoreRestClient restClient, OrdersView ordersView)
         {
             _restClient = restClient;
             _ordersView = ordersView;
+            _ordersDetailsList = new ObservableCollection<OrderDetailsItemAddControl>();
             InitializeComponent();
+            OrderDetailsList.ItemsSource = _ordersDetailsList;
             AddOrderDetailsItemToList();
         }
-        public void AddOrderDetailsItemToList()
+        #endregion
+        #region Private Methods
+        private void AddOrderDetailsItemToList()
         {
-            OrderDetailsList.Items.Add(new OrderDetailsItemAddControl(_restClient));
+            _ordersDetailsList.Add(new OrderDetailsItemAddControl(_restClient));
         }
+        #endregion
+        #region GUI Interactions
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
             AddOrderDetailsItemToList();
         }
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
-            var selectedItems = OrderDetailsList.SelectedItems;
+            var selectedItems = OrderDetailsList.SelectedItems.Cast<OrderDetailsItemAddControl>().ToList();
             foreach (var item in selectedItems)
             {
-                OrderDetailsList.Items.Remove(item);
+                _ordersDetailsList.Remove(item);
             }
         }
-
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             if (Comment.Text == "")
@@ -90,5 +100,6 @@ namespace StoreClient.Windows
         {
             Close();
         }
+        #endregion
     }
 }
