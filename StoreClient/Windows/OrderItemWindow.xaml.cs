@@ -23,28 +23,38 @@ namespace StoreClient.Windows
     /// <summary>
     /// Interaction logic for OrderItemWindow.xaml
     /// </summary>
-    public partial class OrderItemAddWindow : Window
+    public partial class OrderItemWindow : Window
     {
         #region Private vars
         private StoreRestClient _restClient;
         private OrdersView _ordersView;
-        private ObservableCollection<OrderDetailsItemAddControl> _ordersDetailsList;
+        private ObservableCollection<OrderDetailsItemAddControl> _orderDetailsList;
+        private ORDER _item;
         #endregion
         #region Contructor
-        public OrderItemAddWindow(StoreRestClient restClient, OrdersView ordersView)
+        public OrderItemWindow(StoreRestClient restClient, OrdersView ordersView, ORDER item = null)
         {
             _restClient = restClient;
             _ordersView = ordersView;
-            _ordersDetailsList = new ObservableCollection<OrderDetailsItemAddControl>();
+            _item = item;
+            _orderDetailsList = new ObservableCollection<OrderDetailsItemAddControl>();
             InitializeComponent();
-            OrderDetailsList.ItemsSource = _ordersDetailsList;
-            AddOrderDetailsItemToList();
+            OrderDetailsList.ItemsSource = _orderDetailsList;
+            if(item == null)
+                AddOrderDetailsItemToList();
+            else
+            {
+                foreach(var detail in item.Details)
+                {
+                    AddOrderDetailsItemToList(detail);
+                }
+            }
         }
         #endregion
         #region Private Methods
-        private void AddOrderDetailsItemToList()
+        private void AddOrderDetailsItemToList(ORDERDETAILS item = null)
         {
-            _ordersDetailsList.Add(new OrderDetailsItemAddControl(_restClient));
+            _orderDetailsList.Add(new OrderDetailsItemAddControl(_restClient, item));
         }
         #endregion
         #region GUI Interactions
@@ -57,8 +67,16 @@ namespace StoreClient.Windows
             var selectedItems = OrderDetailsList.SelectedItems.Cast<OrderDetailsItemAddControl>().ToList();
             foreach (var item in selectedItems)
             {
-                _ordersDetailsList.Remove(item);
+                _orderDetailsList.Remove(item);
             }
+        }
+        private void OwnersButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void OwnersButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+
         }
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {

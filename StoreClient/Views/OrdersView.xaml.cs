@@ -1,4 +1,5 @@
 ﻿using StoceClient.DatabaseModels;
+using StoreClient.Controls;
 using StoreClient.DatabaseModels;
 using StoreClient.Utils;
 using StoreClient.Windows;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace StoreClient.Views
@@ -39,11 +41,13 @@ namespace StoreClient.Views
             _ordersCache = ordersList;
             ordersList.ForEach(order =>
             {
+                var dataGrid = InitializeDataGridOfDetails(order.Details);
+                dataGrid.MouseDoubleClick += DataGrid_MouseDoubleClick;
                 Expander expander = new Expander()
                 {
                     Header = order.Comment,
                     Tag = order.Id,
-                    Content = InitializeDataGridOfDetails(order.Details)
+                    Content = dataGrid
                 };
                 OrdersListView.Items.Add(expander);
             });
@@ -53,11 +57,13 @@ namespace StoreClient.Views
             OrdersListView.Items.Clear();
             _ordersCache.ForEach(order =>
             {
+                var dataGrid = InitializeDataGridOfDetails(order.Details);
+                dataGrid.MouseDoubleClick += DataGrid_MouseDoubleClick;
                 Expander expander = new Expander()
                 {
                     Header = order.Comment,
                     Tag = order.Id,
-                    Content = InitializeDataGridOfDetails(order.Details)
+                    Content = dataGrid
                 };
                 OrdersListView.Items.Add(expander);
             });
@@ -182,6 +188,15 @@ namespace StoreClient.Views
         }
         #endregion
         #region GUI Interactions
+        private async void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (OrdersListView.SelectedItem == null)
+                return;
+            int orderId = int.Parse((OrdersListView.SelectedItem as Expander).Tag.ToString());
+            var item = (await _restClient.GetOrders()).FirstOrDefault(order => order.Id == orderId);
+            var window = new OrderItemWindow(_restClient, this, item);
+            window.Show();
+        }
         private void OrderDetailsDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             var currentDataGrid = sender as DataGrid;
@@ -242,7 +257,7 @@ namespace StoreClient.Views
         }
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
-            var window = new OrderItemAddWindow(_restClient, this);
+            var window = new OrderItemWindow(_restClient, this);
             window.Show();
         }
         private async void Delete_Button_Click(object sender, RoutedEventArgs e)

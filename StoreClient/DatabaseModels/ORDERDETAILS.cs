@@ -33,7 +33,7 @@ namespace StoreClient.DatabaseModels
                 else if (value == "Dostarczone") Status = OrderStatusMapping.DELIVERED;
             }
         }
-        public List<string> StatusOptions
+        public static List<string> StatusOptions
         {
             get
             {
