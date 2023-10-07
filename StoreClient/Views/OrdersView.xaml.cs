@@ -106,28 +106,18 @@ namespace StoreClient.Views
                 Width = 60
             };
             dataGrid.Columns.Add(textColumn);
-
-            // Add Status column
-            DataGridTemplateColumn statusColumn = new DataGridTemplateColumn();
-            statusColumn.Header = "Status";
-
-            // Cell Template (Non-editing mode)
-            FrameworkElementFactory nonEditingFactory = new FrameworkElementFactory(typeof(TextBlock));
-            nonEditingFactory.SetBinding(TextBlock.TextProperty, new Binding("StatusMapping"));
-            statusColumn.CellTemplate = new DataTemplate() { VisualTree = nonEditingFactory };
-
-            // Cell Editing Template (Editing mode)
-            FrameworkElementFactory editingFactory = new FrameworkElementFactory(typeof(ComboBox));
-            editingFactory.SetBinding(ComboBox.ItemsSourceProperty, new Binding("StatusOptions"));
-            editingFactory.SetBinding(ComboBox.SelectedItemProperty, new Binding("StatusMapping"));
-
-            statusColumn.CellEditingTemplate = new DataTemplate() { VisualTree = editingFactory };
-
-            dataGrid.Columns.Add(statusColumn);
-
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "Status",
+                Binding = new Binding("StatusMapping"),
+                Width = 60
+            };
+            dataGrid.Columns.Add(textColumn);
             dataGrid.AutoGenerateColumns = false;
             dataGrid.ItemsSource = details;
-            dataGrid.CellEditEnding += OrderDetailsDataGrid_CellEditEnding;
+            dataGrid.CanUserAddRows = false;
+            dataGrid.CanUserDeleteRows = false;
+            dataGrid.IsReadOnly = true;
             return dataGrid;
         }
         private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
@@ -196,56 +186,6 @@ namespace StoreClient.Views
             var item = (await _restClient.GetOrders()).FirstOrDefault(order => order.Id == orderId);
             var window = new OrderItemWindow(_restClient, this, item);
             window.Show();
-        }
-        private void OrderDetailsDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            var currentDataGrid = sender as DataGrid;
-            var oderId = ((ORDERDETAILS)currentDataGrid.Items[0]).OrderId;
-            if (e.EditAction == DataGridEditAction.Commit)
-            {
-                if (e.Column is DataGridTemplateColumn templateColumn && templateColumn.CellEditingTemplate != null)
-                {
-                    ContentPresenter contentPresenter = e.EditingElement as ContentPresenter;
-                    if (contentPresenter == null) return;
-                    ComboBox comboBox = FindVisualChild<ComboBox>(contentPresenter);
-                    if (comboBox == null) return;
-                    string newValue = comboBox.SelectedItem as string;
-                    if (newValue == null) return;
-                    if (e.Row.DataContext is ORDERDETAILS editedItem)
-                    {
-                        string initialValue = editedItem.StatusMapping;
-                        editedItem.StatusMapping = newValue;
-                        if (editedItem.OrderId == null) editedItem.OrderId = oderId;
-                        if (!_restClient.SaveOrderDetailsItem(ref editedItem))
-                        {
-                            editedItem.StatusMapping = initialValue;
-                            //((string)comboBox.SelectedItem) = initialValue;
-                        }
-                    }
-
-                }
-                else
-                {
-                    TextBox element = e.EditingElement as TextBox;
-                    ORDERDETAILS odItem = element.DataContext as ORDERDETAILS;
-
-                    var propName = ((BindingExpression)((DataGridCell)element.Parent).BindingGroup.BindingExpressions[0]).ResolvedSourcePropertyName;
-                    var propInfo = odItem.GetType().GetProperties().ToList().FirstOrDefault(prop => prop.Name == propName);
-                    var initialValue = propInfo.GetValue(odItem);
-
-                    propInfo.SetValue(odItem, FieldTypeConverter.Convert(propInfo, element.Text));
-
-                    if (odItem.OrderId == null) odItem.OrderId = oderId;
-                    if (!_restClient.SaveOrderDetailsItem(ref odItem))
-                    {
-                        propInfo.SetValue(odItem, initialValue);
-                        if (initialValue != null)
-                            element.Text = initialValue.ToString();
-                        else
-                            element.Text = string.Empty;
-                    }
-                }
-            }
         }
         private void ShowDeliveredCheckBox_Checked(object sender, RoutedEventArgs e)
         {

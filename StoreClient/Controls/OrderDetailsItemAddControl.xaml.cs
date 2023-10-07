@@ -1,25 +1,11 @@
 ﻿using StoreClient.DatabaseModels;
 using StoreClient.Utils;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace StoreClient.Controls
 {
-    /// <summary>
-    /// Interaction logic for OrderDetailsItemAddControl.xaml
-    /// </summary>
     public partial class OrderDetailsItemAddControl : UserControl
     {
         #region Private cars
@@ -78,7 +64,7 @@ namespace StoreClient.Controls
         {
             //ItemsChoice [Brand + Name]
             string choice = item.Brand + " " + item.Name;
-            if (((ComboBoxItem)ItemChoice.SelectedItem).Content.ToString() != choice)
+            if (ItemChoice.SelectedItem == null || ((ComboBoxItem)ItemChoice.SelectedItem).Content.ToString() != choice)
             {
                 var storageItem = (await _restClient.GetStorage()).FirstOrDefault(storage => storage.Brand + storage.Name == choice);
                 if (storageItem == null)
