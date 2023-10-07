@@ -1,5 +1,6 @@
 ﻿using StoreClient.DatabaseModels;
 using StoreClient.Utils;
+using System;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -34,13 +35,27 @@ namespace StoreClient.Controls
         }
         #endregion
         #region Public Methods
-        public int GetProductId()
+        internal int? GetDetailID()
+        {
+            if(_item == null)
+                return null;
+            return _item.Id;
+        }
+        public int GetStorageId()
         {
             return int.Parse(((ComboBoxItem)ItemChoice.SelectedItem).Tag.ToString());
         }
         public int GetVolume()
         {
+            if (Volume.Text == "")
+                return 0;
             return int.Parse(Volume.Text);
+        }
+        public int GetConcentration()
+        {
+            if(Concentration.Text=="")
+                return 0;
+            return int.Parse(Concentration.Text);
         }
         /// <summary>
         /// Automatically sets the Status to DELIVERED or to previous Status state

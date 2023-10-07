@@ -44,6 +44,7 @@ namespace StoreClient.Windows
                 AddOrderDetailsItemToList();
             else
             {
+                Comment.Text = item.Comment;
                 foreach(var detail in item.Details)
                 {
                     AddOrderDetailsItemToList(detail);
@@ -89,24 +90,36 @@ namespace StoreClient.Windows
             foreach(var item in OrderDetailsList.Items)
             {
                 var myActualItem = (OrderDetailsItemAddControl)item;
-                var productId = myActualItem.GetProductId();
-                var dbProduct = (await _restClient.GetStorage()).FirstOrDefault(dbItem => dbItem.Id == productId);
+                var itemID = myActualItem.GetDetailID();
+                var storageID = myActualItem.GetStorageId();
+                var dbStorageItem = (await _restClient.GetStorage()).FirstOrDefault(dbItem => dbItem.Id == storageID);
 
                 var volume = myActualItem.GetVolume();
+                var concentration = myActualItem.GetConcentration();
                 var detailsItem = new ORDERDETAILS()
                 {
-                    Brand = dbProduct.Brand,
-                    Name = dbProduct.Name,
-                    Volume = volume
+                    Id = itemID,
+                    Brand = dbStorageItem.Brand,
+                    Name = dbStorageItem.Name,
+                    Volume = volume,
+                    Concentration = concentration
                 };
                 listOfDetails.Add(detailsItem);
             }
-            var orderItem = new ORDER()
+            if (_item == null)
             {
-                Comment = Comment.Text,
-                Details = listOfDetails
-            };
-            if (!_restClient.SaveOrder(ref orderItem))
+                _item = new ORDER()
+                {
+                    Comment = Comment.Text,
+                    Details = listOfDetails
+                };
+            }
+            else
+            {
+                _item.Comment = Comment.Text;
+                _item.Details = listOfDetails;
+            }
+            if (!_restClient.SaveOrder(ref _item))
             {
                 Log.ShowServerErrorBox("Coś poszło nie tak podczas przesyłania zamówienia na serwer. Spróbuj ponownie.");
                 return;
