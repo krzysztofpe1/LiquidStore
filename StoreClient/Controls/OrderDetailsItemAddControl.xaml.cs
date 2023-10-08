@@ -57,6 +57,10 @@ namespace StoreClient.Controls
                 return 0;
             return int.Parse(Concentration.Text);
         }
+        public int GetStatus()
+        {
+            return Status.SelectedIndex+1;
+        }
         /// <summary>
         /// Automatically sets the Status to DELIVERED or to previous Status state
         /// </summary>
@@ -112,7 +116,7 @@ namespace StoreClient.Controls
             //Concentration
             Concentration.Text = item.Concentration.ToString();
             //Status
-            var statusItem = Status.Items.Cast<ComboBoxItem>().FirstOrDefault(si=>si.Content.ToString() == item.Status.ToString());
+            var statusItem = Status.Items.Cast<ComboBoxItem>().FirstOrDefault(si=>si.Content.ToString() == item.StatusMapping);
             var statusIndex = Status.Items.IndexOf(statusItem);
             Status.SelectedIndex = statusIndex;
             

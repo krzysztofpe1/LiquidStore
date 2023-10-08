@@ -100,13 +100,15 @@ namespace StoreClient.Windows
 
                 var volume = myActualItem.GetVolume();
                 var concentration = myActualItem.GetConcentration();
+                var status = myActualItem.GetStatus();
                 var detailsItem = new ORDERDETAILS()
                 {
                     Id = itemID,
                     Brand = dbStorageItem.Brand,
                     Name = dbStorageItem.Name,
                     Volume = volume,
-                    Concentration = concentration
+                    Concentration = concentration,
+                    Status = (OrderStatusMapping)status
                 };
                 listOfDetails.Add(detailsItem);
             }
