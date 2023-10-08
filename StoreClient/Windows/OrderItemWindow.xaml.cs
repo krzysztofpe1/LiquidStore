@@ -30,6 +30,7 @@ namespace StoreClient.Windows
         private OrdersView _ordersView;
         private ObservableCollection<OrderDetailsItemAddControl> _orderDetailsList;
         private ORDER _item;
+        private List<ORDERDETAILS> _deletedItems;
         #endregion
         #region Contructor
         public OrderItemWindow(StoreRestClient restClient, OrdersView ordersView, ORDER item = null)
@@ -38,6 +39,7 @@ namespace StoreClient.Windows
             _ordersView = ordersView;
             _item = item;
             _orderDetailsList = new ObservableCollection<OrderDetailsItemAddControl>();
+            _deletedItems = new List<ORDERDETAILS>();
             InitializeComponent();
             OrderDetailsList.ItemsSource = _orderDetailsList;
             if(item == null)
@@ -63,11 +65,13 @@ namespace StoreClient.Windows
         {
             AddOrderDetailsItemToList();
         }
-        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        private async void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
             var selectedItems = OrderDetailsList.SelectedItems.Cast<OrderDetailsItemAddControl>().ToList();
             foreach (var item in selectedItems)
             {
+                if (item.GetDetailID() != null)
+                    _deletedItems.Add(await _restClient.GetOrderDetailsItem(item.GetDetailID().Value));
                 _orderDetailsList.Remove(item);
             }
         }
@@ -123,6 +127,11 @@ namespace StoreClient.Windows
             {
                 Log.ShowServerErrorBox("Coś poszło nie tak podczas przesyłania zamówienia na serwer. Spróbuj ponownie.");
                 return;
+            }
+            foreach(var item in _deletedItems)
+            {
+                if(!_restClient.DeleteOrderDetailsItem(item))
+                    Log.ShowServerErrorBox($"Nie można było usunąć przemdiotu z zamówienia: {item.Brand + " " + item.Name}");
             }
             _ordersView.RefreshAsync(true);
             Close();

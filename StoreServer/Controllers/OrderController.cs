@@ -23,6 +23,15 @@ namespace StoreServer.Controllers
             if (item != null) return Ok(new List<ORDER> { item });
             return NotFound();
         }
+        [HttpGet]
+        [Route("details")]
+        public ActionResult<ORDERDETAILS> GetOrderDetailsItem([FromQuery] int? id)
+        {
+            if (id == null) return BadRequest();
+            var item = _service.GetOrderDetailsItem(id.Value);
+            if(item != null) return Ok(item);
+            return NotFound();
+        }
         [HttpPut]
         public ActionResult<ORDER> Save([FromBody]ORDER item)
         {
@@ -99,7 +108,7 @@ namespace StoreServer.Controllers
             try
             {
                 if (item.Id == null) return BadRequest();
-                _service.DeleteOrder(item.Id);
+                _service.DeleteOrderDetail(item.Id);
                 return Ok();
             }
             catch (ApiException ex)

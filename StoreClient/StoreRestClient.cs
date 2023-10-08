@@ -87,6 +87,12 @@ namespace StoreClient
             var orderList = System.Text.Json.JsonSerializer.Deserialize<List<ORDER>>(response, options);
             return orderList;
         }
+        public async Task<ORDERDETAILS>GetOrderDetailsItem(int id)
+        {
+            var response = await _httpClient.GetStringAsync(_baseUrl + $"/order/details?id={id}");
+            var orderDetailsItem = JsonConvert.DeserializeObject<ORDERDETAILS>(response);
+            return orderDetailsItem;
+        }
         #endregion
         #region save item
         public bool SaveStorageItem(ref STORAGE item)

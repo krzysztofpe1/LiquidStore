@@ -25,6 +25,11 @@ namespace StoreServer.Services
                 .Include(o => o.Details)
                 .FirstOrDefault(item => item.Id == id);
         }
+        public ORDERDETAILS? GetOrderDetailsItem(int id)
+        {
+            return _dbContext.OrderDetails
+                .FirstOrDefault(item => item.Id == id);
+        }
 
         public ORDER Insert(ORDER item)
         {
@@ -67,10 +72,14 @@ namespace StoreServer.Services
             if (id == null)
                 throw new ApiException(HttpStatusCode.BadRequest, "You dumb fuck, id is null while deleting Orders item.");
             _dbContext.Orders.Where(item => item.Id == id).ExecuteDelete();
+            _dbContext.SaveChanges();
         }
         public void DeleteOrderDetail(int? id)
         {
-
+            if (id == null)
+                throw new ApiException(HttpStatusCode.BadRequest, "Id is null while deleting OrderDetails item.");
+            _dbContext.OrderDetails.Where(item=>item.Id == id).ExecuteDelete();
+            _dbContext.SaveChanges();
         }
     }
 }
