@@ -77,11 +77,17 @@ namespace StoreClient.Windows
         }
         private void OwnersButton_Checked(object sender, RoutedEventArgs e)
         {
-
+            foreach(var item in _orderDetailsList)
+            {
+                item.SetOrderStatus(true);
+            }
         }
         private void OwnersButton_Unchecked(object sender, RoutedEventArgs e)
         {
-
+            foreach (var item in _orderDetailsList)
+            {
+                item.SetOrderStatus(false);
+            }
         }
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {

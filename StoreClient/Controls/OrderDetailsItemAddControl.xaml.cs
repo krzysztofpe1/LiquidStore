@@ -29,7 +29,7 @@ namespace StoreClient.Controls
             else
             {
                 PopulateInputs(item);
-                
+
 
             }
         }
@@ -37,7 +37,7 @@ namespace StoreClient.Controls
         #region Public Methods
         internal int? GetDetailID()
         {
-            if(_item == null)
+            if (_item == null)
                 return null;
             return _item.Id;
         }
@@ -53,13 +53,13 @@ namespace StoreClient.Controls
         }
         public int GetConcentration()
         {
-            if(Concentration.Text=="")
+            if (Concentration.Text == "")
                 return 0;
             return int.Parse(Concentration.Text);
         }
         public int GetStatus()
         {
-            return Status.SelectedIndex+1;
+            return Status.SelectedIndex + 1;
         }
         /// <summary>
         /// Automatically sets the Status to DELIVERED or to previous Status state
@@ -72,7 +72,7 @@ namespace StoreClient.Controls
                 _previousStatus = Status.SelectedIndex;
                 Status.SelectedIndex = 2;
             }
-            else if(_previousStatus != null)
+            else if (_previousStatus != null)
             {
                 Status.SelectedIndex = _previousStatus.Value;
             }
@@ -85,7 +85,7 @@ namespace StoreClient.Controls
             string choice = item.Brand + " " + item.Name;
             if (ItemChoice.SelectedItem == null || ((ComboBoxItem)ItemChoice.SelectedItem).Content.ToString() != choice)
             {
-                var storageItem = (await _restClient.GetStorage()).FirstOrDefault(storage => storage.Brand + storage.Name == choice);
+                var storageItem = (await _restClient.GetStorage()).FirstOrDefault(storage => storage.Brand + " " + storage.Name == choice);
                 if (storageItem == null)
                 {
                     storageItem = new STORAGE()
@@ -102,12 +102,17 @@ namespace StoreClient.Controls
                         return;
                     }
                 }
-                var ICindex = ItemChoice.Items.Add(new ComboBoxItem()
+                var ICItem = ItemChoice.Items.Cast<ComboBoxItem>().FirstOrDefault(icItem => icItem.Content.ToString() == choice);
+                var ICIndex = ItemChoice.Items.IndexOf(ICItem);
+                if(ICIndex == -1)
                 {
-                    Content = choice,
-                    Tag = storageItem.Id
-                });
-                ItemChoice.SelectedIndex = ICindex;
+                    ICIndex = ItemChoice.Items.Add(new ComboBoxItem()
+                    {
+                        Content = choice,
+                        Tag = storageItem.Id
+                    });
+                }
+                ItemChoice.SelectedIndex = ICIndex;
             }
             //Volume
             var CBItem = Volume.Items.Cast<ComboBoxItem>().FirstOrDefault(cbi => cbi.Content.ToString() == item.Volume.ToString());
@@ -116,14 +121,15 @@ namespace StoreClient.Controls
             //Concentration
             Concentration.Text = item.Concentration.ToString();
             //Status
-            var statusItem = Status.Items.Cast<ComboBoxItem>().FirstOrDefault(si=>si.Content.ToString() == item.StatusMapping);
+            var statusItem = Status.Items.Cast<ComboBoxItem>().FirstOrDefault(si => si.Content.ToString() == item.StatusMapping);
             var statusIndex = Status.Items.IndexOf(statusItem);
             Status.SelectedIndex = statusIndex;
-            
+
         }
         private async void InitializeItemChoiceList()
         {
-            var storage = (await _restClient.GetStorage()).Where(item => item.Remaining >= 5);
+            var storage = (await _restClient.GetStorage()).Where(item => item.Remaining>=5);
+            string toSearch = (_item == null) ? string.Empty : _item.Brand + " " + _item.Name;
             foreach (var item in storage)
             {
                 string result = item.Brand + " " + item.Name;
@@ -133,7 +139,9 @@ namespace StoreClient.Controls
                     Tag = item.Id
                 };
                 var index = ItemChoice.Items.Add(listItem);
-                ItemChoice.SelectedIndex = index;
+                //doesn't work for some reason
+                if(toSearch!=string.Empty && result==toSearch)
+                    ItemChoice.SelectedIndex = index;
             }
         }
         #endregion
