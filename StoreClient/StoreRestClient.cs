@@ -117,7 +117,7 @@ namespace StoreClient
                     Id = item.Id,
                     Comment = item.Comment
                 };
-                var order = await SaveOrder(tempItem);
+                tempItem = await SaveOrder(tempItem);
                 item.Id = tempItem.Id;
                 if(item.Id == null)
                     return null;
@@ -134,11 +134,13 @@ namespace StoreClient
                         Status = detail.Status,
                         OrderId = detail.OrderId,
                     };
-                    SaveOrderDetailsItem(newItem);
-                    if(newItem == null)
+                    if((await SaveOrderDetailsItem(newItem)) == null)
+                    {
+                        await DeleteOrder(tempItem);
                         return null;
+                    }
                 }
-                return order;
+                return tempItem;
             }
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/order");
             var content = new StringContent(JsonConvert.SerializeObject(item));

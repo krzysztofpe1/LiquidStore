@@ -10,16 +10,18 @@ namespace StoreServer.Controllers
     [Route("[controller]")]
     public class OrderController : Controller
     {
-        private readonly OrderDbService _service;
-        public OrderController(OrderDbService service)
+        private readonly OrderDbService _orderService;
+        private readonly StorageDbService _storageService;
+        public OrderController(OrderDbService orderService, StorageDbService storageService)
         {
-            _service = service;
+            _orderService = orderService;
+            _storageService = storageService;
         }
         [HttpGet]
         public ActionResult<IEnumerable<ORDER>> Get([FromQuery] int? id)
         {
-            if (id == null) return Ok(_service.Get());
-            var item = _service.Get(id.Value);
+            if (id == null) return Ok(_orderService.Get());
+            var item = _orderService.Get(id.Value);
             if (item != null) return Ok(new List<ORDER> { item });
             return NotFound();
         }
@@ -28,7 +30,7 @@ namespace StoreServer.Controllers
         public ActionResult<ORDERDETAILS> GetOrderDetailsItem([FromQuery] int? id)
         {
             if (id == null) return BadRequest();
-            var item = _service.GetOrderDetailsItem(id.Value);
+            var item = _orderService.GetOrderDetailsItem(id.Value);
             if(item != null) return Ok(item);
             return NotFound();
         }
@@ -39,12 +41,12 @@ namespace StoreServer.Controllers
             {
                 if(item.Id == null)
                 {
-                    var newItem = _service.Insert(item);
+                    var newItem = _orderService.Insert(item);
                     return Created($"/order?id={newItem.Id}", JsonConvert.SerializeObject(newItem));
                 }
                 else
                 {
-                    _service.Update(item);
+                    _orderService.Update(item);
                     return Created($"/order?id={item.Id}", JsonConvert.SerializeObject(item));
                 }
             }
@@ -65,12 +67,14 @@ namespace StoreServer.Controllers
             {
                 if (item.Id == null)
                 {
-                    var newItem = _service.Insert(item);
+                    var newItem = _orderService.Insert(item);
+                    SubtractMaterialFromStorage(newItem);
                     return Created($"/order/details?id={newItem.Id}", JsonConvert.SerializeObject(newItem));
                 }
                 else
                 {
-                    _service.Update(item);
+                    SubtractMaterialFromStorage(item);
+                    _orderService.Update(item);
                     return Created($"/order/details?id={item.Id}", JsonConvert.SerializeObject(item));
                 }
             }
@@ -89,7 +93,7 @@ namespace StoreServer.Controllers
             try
             {
                 if (item.Id == null) return BadRequest();
-                _service.DeleteOrder(item.Id);
+                _orderService.DeleteOrder(item.Id);
                 return Ok();
             }
             catch(ApiException ex)
@@ -108,7 +112,7 @@ namespace StoreServer.Controllers
             try
             {
                 if (item.Id == null) return BadRequest();
-                _service.DeleteOrderDetail(item.Id);
+                _orderService.DeleteOrderDetail(item.Id);
                 return Ok();
             }
             catch (ApiException ex)
@@ -119,6 +123,17 @@ namespace StoreServer.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        private bool SubtractMaterialFromStorage(ORDERDETAILS orderDetails)
+        {
+            var storageItem = _storageService.Get().FirstOrDefault(s=>s.Brand == orderDetails.Brand && s.Name == orderDetails.Name);
+            if (storageItem == null)
+                return false;
+            storageItem.Remaining -= orderDetails.Volume/10;
+            if(storageItem.Remaining < 0)
+                return false;
+            _storageService.Update(storageItem);
+            return true;
         }
     }
 }
