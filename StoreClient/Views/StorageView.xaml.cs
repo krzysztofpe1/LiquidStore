@@ -67,35 +67,6 @@ namespace StoreClient.Views
 
         #endregion
         #region GUI Interactions
-        private void StorageDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            if (e.EditAction != DataGridEditAction.Commit) return;
-            TextBox element = e.EditingElement as TextBox;
-            STORAGE storageItem = element.DataContext as STORAGE;
-            var newItem = storageItem.Id == null;
-
-            var propName = ((BindingExpression)((DataGridCell)element.Parent).BindingGroup.BindingExpressions[0]).ResolvedSourcePropertyName;
-            var propInfo = storageItem.GetType().GetProperties().ToList().FirstOrDefault(prop => prop.Name == propName);
-            var initialValue = propInfo.GetValue(storageItem);
-
-            propInfo.SetValue(storageItem, FieldTypeConverter.Convert(propInfo, element.Text));
-
-            if (!_restClient.SaveStorageItem(ref storageItem))
-            {
-                propInfo.SetValue(storageItem, initialValue);
-                if (initialValue != null)
-                    element.Text = initialValue.ToString();
-                else
-                    element.Text = string.Empty;
-            }
-            if (newItem && _storageCache.Count > 0)
-            {
-                _storageCache.RemoveAt(_storageCache.Count - 1);
-                _storageCache.Add(storageItem);
-                _storageCache.Add(new STORAGE());
-            }
-            StorageDataGrid.Focus();
-        }
         private void ShowUsedStorage(object sender, RoutedEventArgs e)
         {
             StorageDataGrid.ItemsSource = _storageCache;

@@ -76,7 +76,6 @@ namespace StoreClient
             var storageList = System.Text.Json.JsonSerializer.Deserialize<List<STORAGE>>(response, options);
             return storageList;
         }
-
         public async Task<List<ORDER>> GetOrders()
         {
             var response = await _httpClient.GetStringAsync(_baseUrl + "/order");
@@ -95,22 +94,21 @@ namespace StoreClient
         }
         #endregion
         #region save item
-        public bool SaveStorageItem(ref STORAGE item)
+        public async Task<STORAGE> SaveStorageItem(STORAGE item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/storage");
             var content = new StringContent(JsonConvert.SerializeObject(item));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
-            var response = _httpClient.SendAsync(httpMessage).Result;
+            var response = await _httpClient.SendAsync(httpMessage);
             if (response.StatusCode == HttpStatusCode.Created)
             {
                 item = JsonConvert.DeserializeObject<STORAGE>(response.Content.ReadAsStringAsync().Result);
-                return true;
+                return item;
             }
-            return false;
+            return null;
         }
-
-        internal bool SaveOrder(ref ORDER item)
+        public async Task<ORDER> SaveOrder(ORDER item)
         {
             if (item.Details != null)
             {
@@ -119,10 +117,10 @@ namespace StoreClient
                     Id = item.Id,
                     Comment = item.Comment
                 };
-                SaveOrder(ref tempItem);
+                var order = await SaveOrder(tempItem);
                 item.Id = tempItem.Id;
                 if(item.Id == null)
-                    return false;
+                    return null;
                 foreach(var detail in item.Details)
                 {
                     detail.OrderId = tempItem.Id;
@@ -136,11 +134,11 @@ namespace StoreClient
                         Status = detail.Status,
                         OrderId = detail.OrderId,
                     };
-                    SaveOrderDetailsItem(ref newItem);
-                    if(newItem.Id == null)
-                        return false;
+                    SaveOrderDetailsItem(newItem);
+                    if(newItem == null)
+                        return null;
                 }
-                return true;
+                return order;
             }
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/order");
             var content = new StringContent(JsonConvert.SerializeObject(item));
@@ -150,54 +148,53 @@ namespace StoreClient
             if (response.StatusCode == HttpStatusCode.Created)
             {
                 item = JsonConvert.DeserializeObject<ORDER>(response.Content.ReadAsStringAsync().Result);
-                return true;
+                return item;
             }
-            return false;
+            return null;
         }
-
-        public bool SaveOrderDetailsItem(ref ORDERDETAILS item)
+        public async Task<ORDERDETAILS> SaveOrderDetailsItem(ORDERDETAILS item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Put, _baseUrl + "/order/details");
             var content = new StringContent(JsonConvert.SerializeObject(item));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
-            var response = _httpClient.SendAsync(httpMessage).Result;
+            var response = await _httpClient.SendAsync(httpMessage);
             if (response.StatusCode == HttpStatusCode.Created)
             {
                 item = JsonConvert.DeserializeObject<ORDERDETAILS>(response.Content.ReadAsStringAsync().Result);
-                return true;
+                return item;
             }
-            return false;
+            return null;
         }
         #endregion
         #region delete item
-        internal bool DeleteStorageItem(STORAGE item)
+        public async  Task<bool> DeleteStorageItem(STORAGE item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Delete, _baseUrl + "/storage");
             var content = new StringContent(JsonConvert.SerializeObject(item));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
-            var response = _httpClient.SendAsync(httpMessage).Result;
+            var response = await _httpClient.SendAsync(httpMessage);
             if (response.StatusCode == HttpStatusCode.OK) return true;
             return false;
         }
-        internal bool DeleteOrder(ORDER item)
+        public async Task<bool> DeleteOrder(ORDER item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Delete, _baseUrl + "/order");
             var content = new StringContent(JsonConvert.SerializeObject(item));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
-            var respone = _httpClient.SendAsync(httpMessage).Result;
+            var respone = await _httpClient.SendAsync(httpMessage);
             if (respone.StatusCode == HttpStatusCode.OK) return true;
             return false;
         }
-        internal bool DeleteOrderDetailsItem(ORDERDETAILS item)
+        public async Task<bool> DeleteOrderDetailsItem(ORDERDETAILS item)
         {
             var httpMessage = new HttpRequestMessage(HttpMethod.Delete, _baseUrl + "/order/details");
             var content = new StringContent(JsonConvert.SerializeObject(item));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             httpMessage.Content = content;
-            var respone = _httpClient.SendAsync(httpMessage).Result;
+            var respone = await _httpClient.SendAsync(httpMessage);
             if (respone.StatusCode == HttpStatusCode.OK) return true;
             return false;
         }

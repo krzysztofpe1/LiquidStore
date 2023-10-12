@@ -19,7 +19,7 @@ namespace StoreClient.Views
         public bool LoggedIn { get; private set; }
         #endregion
         #region Contructors
-        public LoginView(StoreRestClient restClient)
+        internal LoginView(StoreRestClient restClient)
         {
             _restClient = restClient;
             InitializeComponent();

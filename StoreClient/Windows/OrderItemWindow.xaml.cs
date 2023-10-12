@@ -131,14 +131,14 @@ namespace StoreClient.Windows
                 _item.Comment = Comment.Text;
                 _item.Details = listOfDetails;
             }
-            if (!_restClient.SaveOrder(ref _item))
+            if ((await _restClient.SaveOrder(_item)) == null)
             {
                 Log.ShowServerErrorBox("Coś poszło nie tak podczas przesyłania zamówienia na serwer. Spróbuj ponownie.");
                 return;
             }
             foreach(var item in _deletedItems)
             {
-                if(!_restClient.DeleteOrderDetailsItem(item))
+                if(!(await _restClient.DeleteOrderDetailsItem(item)))
                     Log.ShowServerErrorBox($"Nie można było usunąć przemdiotu z zamówienia: {item.Brand + " " + item.Name}");
             }
             _ordersView.RefreshAsync(true);

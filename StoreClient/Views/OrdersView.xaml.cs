@@ -25,7 +25,7 @@ namespace StoreClient.Views
         private List<ORDER> _ordersCache;
         #endregion
         #region Constructors
-        public OrdersView(StoreRestClient restClient)
+        internal OrdersView(StoreRestClient restClient)
         {
             _restClient = restClient;
             _ordersCache = new List<ORDER>();
@@ -207,7 +207,7 @@ namespace StoreClient.Views
             {
                 var exp = (Expander)expander;
                 var order = (await _restClient.GetOrders()).FirstOrDefault(item => item.Id == int.Parse(exp.Tag.ToString()));
-                if (!_restClient.DeleteOrder(order))
+                if (!(await _restClient.DeleteOrder(order)))
                     Log.ShowServerErrorBox($"Nie udało się usunąć zamówienia: {order.Comment}");
             }
             RefreshAsync(true);

@@ -52,7 +52,7 @@ namespace StoreClient.Views
             Cost.Text = storageItem.Cost.ToString();
             Remaining.Text = storageItem.Remaining.ToString();
         }
-        private void ConfirmButton_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace StoreClient.Views
                     Cost = double.Parse(Cost.Text),
                     Remaining = int.Parse(Remaining.Text)
                 };
-                if (!_restClient.SaveStorageItem(ref item))
+                if ((await _restClient.SaveStorageItem(item)) == null)
                 {
                     Log.ShowUserErrorBox("Coś poszło nie tak, sprobuj poprawić błędy, jeżeli widzisz jakieś.");
                     return;

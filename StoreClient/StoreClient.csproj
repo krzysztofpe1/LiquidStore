@@ -103,7 +103,7 @@
     <Compile Include="DatabaseModels\ORDERDETAILS.cs" />
     <Compile Include="Utils\OrderStatusMapping.cs" />
     <Compile Include="DatabaseModels\STORAGE.cs" />
-    <Compile Include="SessionCredentials.cs" />
+    <Compile Include="Utils\SessionCredentials.cs" />
     <Compile Include="StoreRestClient.cs" />
     <Compile Include="Utils\ColorScheme.cs" />
     <Compile Include="Utils\Constants.cs" />

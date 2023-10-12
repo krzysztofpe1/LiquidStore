@@ -96,7 +96,7 @@ namespace StoreClient.Controls
                         Cost = 0,
                         Remaining = 0
                     };
-                    if (!_restClient.SaveStorageItem(ref storageItem))
+                    if ((await _restClient.SaveStorageItem(storageItem)) == null)
                     {
                         Log.ShowServerErrorBox("Błąd połączenia podczas dodawania przedmiotów do listy.\nNie można dodać pustego przedmiotu do magazynu.\nLepiej zamknij okno, bo zrobi się nieprzyjemnie!");
                         return;
