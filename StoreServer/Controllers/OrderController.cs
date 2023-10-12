@@ -93,6 +93,13 @@ namespace StoreServer.Controllers
             try
             {
                 if (item.Id == null) return BadRequest();
+                if (item.Details != null)
+                {
+                    foreach (var detail in item.Details)
+                    {
+                        Delete(detail);
+                    }
+                }
                 _orderService.DeleteOrder(item.Id);
                 return Ok();
             }
@@ -112,6 +119,7 @@ namespace StoreServer.Controllers
             try
             {
                 if (item.Id == null) return BadRequest();
+                AddMaterialToStorage(item);
                 _orderService.DeleteOrderDetail(item.Id);
                 return Ok();
             }
@@ -132,6 +140,15 @@ namespace StoreServer.Controllers
             storageItem.Remaining -= orderDetails.Volume/10;
             if(storageItem.Remaining < 0)
                 return false;
+            _storageService.Update(storageItem);
+            return true;
+        }
+        private bool AddMaterialToStorage(ORDERDETAILS orderDetails)
+        {
+            var storageItem = _storageService.Get().FirstOrDefault(s=>s.Brand == orderDetails.Brand && s.Name == orderDetails.Name);
+            if(storageItem == null)
+                return false;
+            storageItem.Remaining += orderDetails.Volume/10;
             _storageService.Update(storageItem);
             return true;
         }
