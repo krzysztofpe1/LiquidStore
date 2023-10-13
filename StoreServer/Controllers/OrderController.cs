@@ -31,15 +31,15 @@ namespace StoreServer.Controllers
         {
             if (id == null) return BadRequest();
             var item = _orderService.GetOrderDetailsItem(id.Value);
-            if(item != null) return Ok(item);
+            if (item != null) return Ok(item);
             return NotFound();
         }
         [HttpPut]
-        public ActionResult<ORDER> Save([FromBody]ORDER item)
+        public ActionResult<ORDER> Save([FromBody] ORDER item)
         {
             try
             {
-                if(item.Id == null)
+                if (item.Id == null)
                 {
                     var newItem = _orderService.Insert(item);
                     return Created($"/order?id={newItem.Id}", JsonConvert.SerializeObject(newItem));
@@ -50,7 +50,7 @@ namespace StoreServer.Controllers
                     return Created($"/order?id={item.Id}", JsonConvert.SerializeObject(item));
                 }
             }
-            catch(ApiException ex)
+            catch (ApiException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -73,7 +73,22 @@ namespace StoreServer.Controllers
                 }
                 else
                 {
-                    SubtractMaterialFromStorage(item);
+                    var oldItem = _orderService.GetOrderDetailsItem(item.Id.Value);
+                    if (item.Brand != oldItem.Brand || item.Name != oldItem.Name)
+                    {
+                        AddMaterialToStorage(oldItem);
+                        SubtractMaterialFromStorage(item);
+                    }
+                    else if (item.Volume != oldItem.Volume)
+                    {
+                        var tempItem = new ORDERDETAILS()
+                        {
+                            Volume = item.Volume - oldItem.Volume,
+                            Brand = oldItem.Brand,
+                            Name = oldItem.Name
+                        };
+                        SubtractMaterialFromStorage(tempItem);
+                    }
                     _orderService.Update(item);
                     return Created($"/order/details?id={item.Id}", JsonConvert.SerializeObject(item));
                 }
@@ -103,7 +118,7 @@ namespace StoreServer.Controllers
                 _orderService.DeleteOrder(item.Id);
                 return Ok();
             }
-            catch(ApiException ex)
+            catch (ApiException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -127,28 +142,28 @@ namespace StoreServer.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
         private bool SubtractMaterialFromStorage(ORDERDETAILS orderDetails)
         {
-            var storageItem = _storageService.Get().FirstOrDefault(s=>s.Brand == orderDetails.Brand && s.Name == orderDetails.Name);
+            var storageItem = _storageService.Get().FirstOrDefault(s => s.Brand == orderDetails.Brand && s.Name == orderDetails.Name);
             if (storageItem == null)
                 return false;
-            storageItem.Remaining -= orderDetails.Volume/10;
-            if(storageItem.Remaining < 0)
+            storageItem.Remaining -= orderDetails.Volume / 10;
+            if (storageItem.Remaining < 0)
                 return false;
             _storageService.Update(storageItem);
             return true;
         }
         private bool AddMaterialToStorage(ORDERDETAILS orderDetails)
         {
-            var storageItem = _storageService.Get().FirstOrDefault(s=>s.Brand == orderDetails.Brand && s.Name == orderDetails.Name);
-            if(storageItem == null)
+            var storageItem = _storageService.Get().FirstOrDefault(s => s.Brand == orderDetails.Brand && s.Name == orderDetails.Name);
+            if (storageItem == null)
                 return false;
-            storageItem.Remaining += orderDetails.Volume/10;
+            storageItem.Remaining += orderDetails.Volume / 10;
             _storageService.Update(storageItem);
             return true;
         }
