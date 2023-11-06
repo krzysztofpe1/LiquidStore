@@ -11,8 +11,8 @@ namespace StoreClient.DatabaseModels
         public int Volume { get; set; }
         public double Concentration { get; set; }
         public OrderStatusMapping Status { get; set; } = OrderStatusMapping.ORDERED;
-        public DateTime? DeliveredDate { get; set; }
-        public DateTime? SettledDate { get; set; }
+        public string DeliveredDate { get; set; }
+        public string SettledDate { get; set; }
         public string StatusMapping
         {
             get

@@ -70,7 +70,7 @@ namespace StoreClient.Controls
             if (status)
             {
                 _previousStatus = Status.SelectedIndex;
-                Status.SelectedIndex = 2;
+                Status.SelectedIndex = 3;
             }
             else if (_previousStatus != null)
             {

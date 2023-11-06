@@ -84,7 +84,7 @@ namespace StoreClient
             {
                 PropertyNameCaseInsensitive = true
             };
-            var orderList = System.Text.Json.JsonSerializer.Deserialize<List<ORDER>>(response, options);
+            var orderList = JsonConvert.DeserializeObject<List<ORDER>>(response);
             return orderList;
         }
         public async Task<ORDERDETAILS>GetOrderDetailsItem(int id)
