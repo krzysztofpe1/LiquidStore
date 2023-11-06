@@ -110,7 +110,21 @@ namespace StoreClient.Views
             {
                 Header = "Status",
                 Binding = new Binding("StatusMapping"),
-                Width = 60
+                Width = 80
+            };
+            dataGrid.Columns.Add(textColumn);
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "Dostarczono",
+                Binding = new Binding("DeliveredDate"),
+                Width = 100
+            };
+            dataGrid.Columns.Add(textColumn);
+            textColumn = new DataGridTextColumn()
+            {
+                Header = "Rozliczono",
+                Binding = new Binding("SettledDate"),
+                Width = 100
             };
             dataGrid.Columns.Add(textColumn);
             dataGrid.AutoGenerateColumns = false;
