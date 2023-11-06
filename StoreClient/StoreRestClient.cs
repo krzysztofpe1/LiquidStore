@@ -9,6 +9,7 @@ using System.Windows;
 using System.Text.Json;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace StoreClient
 {

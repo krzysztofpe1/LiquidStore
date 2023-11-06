@@ -149,7 +149,7 @@ namespace StoreClient.Views
             var ordersList = await _restClient.GetOrders();
             if (!ShowDeliveredCheckBox.IsChecked.Value) ordersList = ordersList.Where(item =>
             {
-                if (item.Details.Where(detail => detail.Status != OrderStatusMapping.DELIVERED).Count() == 0) return false;
+                if (item.Details.Where(detail => detail.Status != OrderStatusMapping.SETTLED).Count() == 0) return false;
                 return true;
             }).ToList();
             if (forceRefresh)
@@ -187,11 +187,11 @@ namespace StoreClient.Views
             var window = new OrderItemWindow(_restClient, this, item);
             window.Show();
         }
-        private void ShowDeliveredCheckBox_Checked(object sender, RoutedEventArgs e)
+        private void ShowCompletedCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             var task = RefreshAsync(true);
         }
-        private void ShowDeliveredCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        private void ShowCompletedCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             var tast = RefreshAsync(true);
         }

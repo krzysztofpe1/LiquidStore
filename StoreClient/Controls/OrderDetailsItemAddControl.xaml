@@ -18,6 +18,7 @@
             <ComboBoxItem Content="Zamówione" Tag="1"/>
             <ComboBoxItem Content="Przygotowane" Tag="2"/>
             <ComboBoxItem Content="Dostarczone" Tag="3"/>
+            <ComboBoxItem Content="Rozliczone" Tag="4"/>
         </ComboBox>
     </Grid>
 </UserControl>

@@ -4,6 +4,7 @@
     {
         ORDERED = 1,
         PREPARED = 2,
-        DELIVERED = 3
+        DELIVERED = 3,
+        SETTLED = 4,
     }
 }

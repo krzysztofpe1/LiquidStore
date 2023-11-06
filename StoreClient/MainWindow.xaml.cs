@@ -20,7 +20,11 @@ namespace StoreClient
         public MainWindow()
         {
             InitializeComponent();
+#if(!DEBUG)
             _restClient = new StoreRestClient("http://84.10.162.134:5000");
+#else
+            _restClient = new StoreRestClient("http://localhost:5000");
+#endif
             loginView = new LoginView(_restClient);
             
             MainContent.Content = loginView;
@@ -28,7 +32,7 @@ namespace StoreClient
             _loginWatcherThread.SetApartmentState(ApartmentState.STA);
             _loginWatcherThread.Start();
         }
-        #endregion
+#endregion
         #region Private Methods
         private void LoginWatcher()
         {

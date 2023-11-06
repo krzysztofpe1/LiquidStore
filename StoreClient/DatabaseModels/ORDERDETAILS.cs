@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StoreClient.DatabaseModels
 {
@@ -10,6 +11,8 @@ namespace StoreClient.DatabaseModels
         public int Volume { get; set; }
         public double Concentration { get; set; }
         public OrderStatusMapping Status { get; set; } = OrderStatusMapping.ORDERED;
+        public DateTime? DeliveredDate { get; set; }
+        public DateTime? SettledDate { get; set; }
         public string StatusMapping
         {
             get
@@ -22,6 +25,8 @@ namespace StoreClient.DatabaseModels
                         return "Przygotowane";
                     case OrderStatusMapping.DELIVERED:
                         return "Dostarczone";
+                    case OrderStatusMapping.SETTLED:
+                        return "Rozliczone";
                     default:
                         return "";
                 }
@@ -31,6 +36,7 @@ namespace StoreClient.DatabaseModels
                 if (value == "Zamówione") Status = OrderStatusMapping.ORDERED;
                 else if (value == "Przygotowane") Status = OrderStatusMapping.PREPARED;
                 else if (value == "Dostarczone") Status = OrderStatusMapping.DELIVERED;
+                else if(value == "Rozliczone") Status = OrderStatusMapping.SETTLED;
             }
         }
         public static List<string> StatusOptions
@@ -41,7 +47,8 @@ namespace StoreClient.DatabaseModels
                 {
                     "Zamówione",
                     "Przygotowane",
-                    "Dostarczone"
+                    "Dostarczone",
+                    "Rozliczone"
                 };
             }
         }

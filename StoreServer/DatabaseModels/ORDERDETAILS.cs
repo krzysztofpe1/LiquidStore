@@ -9,5 +9,7 @@
         public double Concentration { get; set; }
         public int? Status { get; set; }
         public int OrderId { get; set; }
+        public DateTime? DeliveredDate { get; set; }
+        public DateTime? SettledDate { get; set; }
     }
 }
