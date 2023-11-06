@@ -67,11 +67,11 @@ namespace StoreServer.Controllers
             {
                 if (item.Id == null)
                 {
-                    if(item.Status == 3 || item.Status == 4)
+                    if (item.Status == 3 || item.Status == 4)
                     {
                         item.DeliveredDate = DateTime.Now.ToString();
                     }
-                    if(item.Status == 4)
+                    if (item.Status == 4)
                     {
                         item.SettledDate = DateTime.Now.ToString();
                     }
@@ -98,19 +98,19 @@ namespace StoreServer.Controllers
                         SubtractMaterialFromStorage(tempItem);
                     }
                     var dbItem = _orderService.GetOrderDetailsItem(item.Id.Value);
-                    if (dbItem.DeliveredDate == string.Empty && (item.Status == 3 || item.Status == 4))
+                    if ((dbItem.DeliveredDate == null || dbItem.DeliveredDate == string.Empty) && (item.Status == 3 || item.Status == 4))
                     {
                         item.DeliveredDate = DateTime.Now.ToString();
                     }
-                    else if(dbItem.DeliveredDate!=string.Empty)
+                    else if (dbItem.DeliveredDate != null && dbItem.DeliveredDate != string.Empty)
                     {
                         item.DeliveredDate = dbItem.DeliveredDate;
                     }
-                    if (dbItem.SettledDate == string.Empty && item.Status == 4)
+                    if ((dbItem.SettledDate == null || dbItem.SettledDate == string.Empty) && item.Status == 4)
                     {
                         item.SettledDate = DateTime.Now.ToString();
                     }
-                    else if (item.SettledDate != string.Empty)
+                    else if (item.SettledDate != null && item.SettledDate != string.Empty)
                     {
                         item.SettledDate = dbItem.SettledDate;
                     }
